@@ -194,13 +194,7 @@ export class WelcomeView {
               color: #f0f0f0;
             }
             .large-logo svg {
-              width: 200px;
-              display: -webkit-flex; /* Safari */  
-              display: flex;
-              -webkit-align-items: center; /* Safari 7.0+ */
-              align-items: center;
-              -webkit-justify-content: center;
-              justify-content: center;
+              width: 300px;
             }
             .recent-session-link {
               white-space: nowrap;
@@ -375,7 +369,7 @@ export class WelcomeView {
               </div>
 
               <div class="col news-col"  style="border: 1px solid blue; padding: 10px; margin: 10px;">
-                <div class="large-logo">
+                <div class="large-logo" style="position: absolute; top: -200px; ">
                   ${studioLargeLogoSrc}
                 </div>
               </div>
