@@ -1,0 +1,34 @@
+# github_url = "https://github.com/jupyterlab/jupyterlab-desktop/"
+
+[version]
+current = "4.1.2-1"
+
+regex = '''
+  (?P<major>\d+)
+  \.
+  (?P<minor>\d+)
+  \.
+  (?P<patch>\d+)
+  \-
+  (?P<build>\d+)
+  '''
+
+[git]
+message_template = "Bump to {new_version}"
+tag_template = "v{new_version}"
+
+[[file]]
+src = "package.json"
+search = '"version": "{current_version}"'
+[[file]]
+src = "env_installer/jlab_server.yaml"
+version_template = "{major}.{minor}.{patch}"
+search = '- jupyterlab {current_version}'
+
+#  [[before_commit]]
+#  name = "check changelog"
+#  cmd = "grep -q {new_version} Changelog.rst"
+
+#  [[after_push]]
+#  name = "publish"
+#  cmd = "./publish.sh"
