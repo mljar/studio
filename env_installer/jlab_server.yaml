@@ -7,11 +7,8 @@ dependencies:
   - jupyterlab 4.1.2
   - ipympl >= 0.8.2
   - matplotlib-base
-  - numpy
-  - pandas
   - pip
-  - python 3.12*
-  - scipy
+  - python 3.11*
 platforms:
   - linux-64
   - linux-aarch64

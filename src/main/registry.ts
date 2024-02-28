@@ -365,6 +365,9 @@ export class Registry implements IRegistry, IDisposable {
    * @returns a promise containing the default environment
    */
   getDefaultEnvironment(): Promise<IPythonEnvironment> {
+    console.log('getDefaultEnvironment');
+    console.log(this._defaultEnv);
+    
     if (this._defaultEnv) {
       return Promise.resolve(this._defaultEnv);
     } else {

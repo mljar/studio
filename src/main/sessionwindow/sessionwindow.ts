@@ -129,9 +129,10 @@ export class SessionWindow implements IDisposable {
       frame: process.platform === 'darwin',
       backgroundColor: this._isDarkTheme ? DarkThemeBGColor : LightThemeBGColor,
       webPreferences: {
-        devTools: false
+        devTools: true
       }
     });
+    this._window.webContents.openDevTools();
 
     this._window.setMenuBarVisibility(false);
     this._window.show();
@@ -1105,8 +1106,8 @@ export class SessionWindow implements IDisposable {
       }
       this._loadWelcomeView();
 
-      this.titleBarView.setTitle('Welcome');
-      this._window.setTitle('Welcome');
+      this.titleBarView.setTitle('MLJAR Studio');
+      this._window.setTitle('MLJAR Studio');
     } else {
       if (this._welcomeView) {
         this._window.removeBrowserView(this._welcomeView.view);
