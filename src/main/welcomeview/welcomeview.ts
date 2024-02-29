@@ -55,6 +55,7 @@ export class WelcomeView {
     // const serverIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M64 32C28.7 32 0 60.7 0 96v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zM344 152c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24zm96-24c0 13.3-10.7 24-24 24s-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24zM64 288c-35.3 0-64 28.7-64 64v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V352c0-35.3-28.7-64-64-64H64zM344 408c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24zm104-24c0 13.3-10.7 24-24 24s-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24z"/></svg>`;
     // const externalLinkIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M352 0c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9L370.7 96 201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L416 141.3l41.4 41.4c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V32c0-17.7-14.3-32-32-32H352zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z"/></svg>`;
 
+
     const showNewsFeed = userSettings.getValue(SettingType.showNewsFeed);
     if (showNewsFeed) {
       // initalize from app cache
@@ -70,13 +71,13 @@ export class WelcomeView {
           <title>MLJAR Studio</title>
           <style>
             body {
-              background: ${LightThemeBGColor};
-              color: #000000;
+              background-color: rgba(249, 250, 251, 0.5);
+              // background: ${LightThemeBGColor};
+              
+              color: rgb(55, 65, 81);
               margin: 0;
               overflow: hidden;
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica,
-                Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-                'Segoe UI Symbol';
+              font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
               font-size: 13px;
               -webkit-user-select: none;
               user-select: none;
@@ -268,15 +269,17 @@ export class WelcomeView {
               position: sticky;
               bottom: 0;
               display: none;
-              height: 50px;
-              padding: 0 20px;
+              height: 250px;
+              padding-top: 0px;
+              padding-bottom: 100px;
+              padding-left: 40px;
+              padding-right: 40px;
               background: inherit;
               border-top: 1px solid #585858;
               align-items: center;
+              font-size: 16px;
             }
             #notification-panel-message {
-              flex-grow: 1;
-              display: flex;
               align-items: center;
             }
             #notification-panel-message a {
@@ -293,6 +296,169 @@ export class WelcomeView {
             }
             .recent-expander-col {
               display: none;
+            }
+            .install-button {
+              font-weight: bold;
+              -webkit-text-size-adjust: 100%;
+              -webkit-tap-highlight-color: transparent;
+              tab-size: 4;
+              --tw-bg-opacity: 1;
+              -webkit-font-smoothing: antialiased;
+              border: 0 solid #e5e7eb;
+              box-sizing: border-box;
+              --tw-border-spacing-x: 0;
+              --tw-border-spacing-y: 0;
+              --tw-translate-x: 0;
+              --tw-translate-y: 0;
+              --tw-rotate: 0;
+              --tw-skew-x: 0;
+              --tw-skew-y: 0;
+              --tw-scale-x: 1;
+              --tw-scale-y: 1;
+              --tw-pan-x: ;
+              --tw-pan-y: ;
+              --tw-pinch-zoom: ;
+              --tw-scroll-snap-strictness: proximity;
+              --tw-gradient-from-position: ;
+              --tw-gradient-via-position: ;
+              --tw-gradient-to-position: ;
+              --tw-ordinal: ;
+              --tw-slashed-zero: ;
+              --tw-numeric-figure: ;
+              --tw-numeric-spacing: ;
+              --tw-numeric-fraction: ;
+              --tw-ring-inset: ;
+              --tw-ring-offset-width: 0px;
+              --tw-ring-offset-color: #fff;
+              --tw-ring-color: rgba(63,131,248,.5);
+              --tw-ring-offset-shadow: 0 0 #0000;
+              --tw-ring-shadow: 0 0 #0000;
+              --tw-shadow: 0 0 #0000;
+              --tw-shadow-colored: 0 0 #0000;
+              --tw-blur: ;
+              --tw-brightness: ;
+              --tw-contrast: ;
+              --tw-grayscale: ;
+              --tw-hue-rotate: ;
+              --tw-invert: ;
+              --tw-saturate: ;
+              --tw-sepia: ;
+              --tw-drop-shadow: ;
+              --tw-backdrop-blur: ;
+              --tw-backdrop-brightness: ;
+              --tw-backdrop-contrast: ;
+              --tw-backdrop-grayscale: ;
+              --tw-backdrop-hue-rotate: ;
+              --tw-backdrop-invert: ;
+              --tw-backdrop-opacity: ;
+              --tw-backdrop-saturate: ;
+              --tw-backdrop-sepia: ;
+              font-feature-settings: inherit;
+              font-family: inherit;
+              font-variation-settings: inherit;
+              margin: 0;
+              text-transform: none;
+              cursor: pointer;
+              -webkit-appearance: button;
+              background-color: transparent;
+              margin-bottom: .5rem;
+              margin-inline-end: .5rem;
+              border-radius: .5rem;
+              background-image: linear-gradient(to right,var(--tw-gradient-stops));
+              --tw-gradient-from: #06b6d4 var(--tw-gradient-from-position);
+              --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to);
+              --tw-gradient-to: #3f83f8 var(--tw-gradient-to-position);
+              padding-left: 1.25rem;
+              padding-right: 1.25rem;
+              padding-bottom: .625rem;
+              padding-top: .625rem;
+              text-align: center;
+              font-size: .875rem;
+              line-height: 1.25rem;
+              font-weight: 500;
+              --tw-text-opacity: 1;
+              color: rgb(255 255 255/var(--tw-text-opacity));
+            }
+            .install-button:hover {
+              -webkit-text-size-adjust: 100%;
+              -webkit-tap-highlight-color: transparent;
+              tab-size: 4;
+              --tw-bg-opacity: 1;
+              -webkit-font-smoothing: antialiased;
+              border: 0 solid #e5e7eb;
+              box-sizing: border-box;
+              --tw-border-spacing-x: 0;
+              --tw-border-spacing-y: 0;
+              --tw-translate-x: 0;
+              --tw-translate-y: 0;
+              --tw-rotate: 0;
+              --tw-skew-x: 0;
+              --tw-skew-y: 0;
+              --tw-scale-x: 1;
+              --tw-scale-y: 1;
+              --tw-pan-x: ;
+              --tw-pan-y: ;
+              --tw-pinch-zoom: ;
+              --tw-scroll-snap-strictness: proximity;
+              --tw-gradient-from-position: ;
+              --tw-gradient-via-position: ;
+              --tw-gradient-to-position: ;
+              --tw-ordinal: ;
+              --tw-slashed-zero: ;
+              --tw-numeric-figure: ;
+              --tw-numeric-spacing: ;
+              --tw-numeric-fraction: ;
+              --tw-ring-inset: ;
+              --tw-ring-offset-width: 0px;
+              --tw-ring-offset-color: #fff;
+              --tw-ring-color: rgba(63,131,248,.5);
+              --tw-ring-offset-shadow: 0 0 #0000;
+              --tw-ring-shadow: 0 0 #0000;
+              --tw-shadow: 0 0 #0000;
+              --tw-shadow-colored: 0 0 #0000;
+              --tw-blur: ;
+              --tw-brightness: ;
+              --tw-contrast: ;
+              --tw-grayscale: ;
+              --tw-hue-rotate: ;
+              --tw-invert: ;
+              --tw-saturate: ;
+              --tw-sepia: ;
+              --tw-drop-shadow: ;
+              --tw-backdrop-blur: ;
+              --tw-backdrop-brightness: ;
+              --tw-backdrop-contrast: ;
+              --tw-backdrop-grayscale: ;
+              --tw-backdrop-hue-rotate: ;
+              --tw-backdrop-invert: ;
+              --tw-backdrop-opacity: ;
+              --tw-backdrop-saturate: ;
+              --tw-backdrop-sepia: ;
+              font-feature-settings: inherit;
+              font-family: inherit;
+              font-variation-settings: inherit;
+              margin: 0;
+              text-transform: none;
+              cursor: pointer;
+              -webkit-appearance: button;
+              background-color: transparent;
+              margin-bottom: .5rem;
+              margin-inline-end: .5rem;
+              border-radius: .5rem;
+              --tw-gradient-from: #06b6d4 var(--tw-gradient-from-position);
+              --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to);
+              --tw-gradient-to: #3f83f8 var(--tw-gradient-to-position);
+              padding-left: 1.25rem;
+              padding-right: 1.25rem;
+              padding-bottom: .625rem;
+              padding-top: .625rem;
+              text-align: center;
+              font-size: .875rem;
+              line-height: 1.25rem;
+              font-weight: 500;
+              --tw-text-opacity: 1;
+              color: rgb(255 255 255/var(--tw-text-opacity));
+              background-image: linear-gradient(to bottom left,var(--tw-gradient-stops));
             }
           </style>
           <script>
@@ -316,49 +482,50 @@ export class WelcomeView {
             </symbol>
           </defs>
           </svg>
-          <div class="container" style="border: 1px solid red">
+          <div class="container">
 
           
-            <div class="row"  style="border: 1px solid black">
+            <div class="row">
               <div class="app-title">
-                <h1>Let's build together!</h1>
+                <h1>MLJAR Studio</h1>
+                <p>Let's build together!</p>
               </div>
             </div>
 
-            <div class="row content-row"  style="border: 1px solid green">
-              <div class="col  start-recent-col"  style="border: 1px solid red">
-                <div class="col start-col">
+            <div class="row content-row">
+              <div class="col  start-recent-col">
+                <div class="col start-col" style="padding-top: 20px;">
                   <div class="row row-title">
                     Start
                   </div>
 
                   <div class="row action-row new-session-action-row">
-                    <a id="new-session-link" href="javascript:void(0)" title="Launch new JupyterLab session in the default working directory" onclick="handleNewSessionClick('blank');">
+                    <a id="new-session-link" href="javascript:void(0)" title="Launch new JupyterLab session in the default working directory" onclick="handleNewSessionClick('blank');" class="disabled">
                       <span class="action-icon">${labIcon}</span>
                       New session ...
                     </a>
                   </div>
                   <div class="row action-row new-notebook-action-row">
-                    <a id="new-notebook-link" href="javascript:void(0)" title="Create new notebook in the default working directory" onclick="handleNewSessionClick('notebook');">
+                    <a id="new-notebook-link" href="javascript:void(0)" title="Create new notebook in the default working directory" onclick="handleNewSessionClick('notebook');" class="disabled">
                       <span class="action-icon">${notebookIcon}</span>
                       New notebook...
                     </a>
                   </div>
                   ${process.platform === 'darwin'
         ? `<div class="row action-row">
-                      <a id="open-file-or-folder-link" href="javascript:void(0)" title="Open a notebook or folder in JupyterLab" onclick="handleNewSessionClick('open');">
+                      <a id="open-file-or-folder-link" href="javascript:void(0)" title="Open a notebook or folder in JupyterLab" onclick="handleNewSessionClick('open');" class="disabled">
                         <span class="action-icon">${openIcon}</span>
                         Open...
                       </a>
                     </div>`
         : `<div class="row action-row">
-                      <a id="open-file-link" href="javascript:void(0)" title="Open a notebook or file in JupyterLab" onclick="handleNewSessionClick('open-file');">
+                      <a id="open-file-link" href="javascript:void(0)" title="Open a notebook or file in JupyterLab" onclick="handleNewSessionClick('open-file');" class="disabled">
                         <span class="action-icon">${openIcon}</span>
                         Open File...
                       </a>
                     </div>
                     <div class="row action-row">
-                      <a id="open-folder-link" href="javascript:void(0)" title="Open a folder in JupyterLab" onclick="handleNewSessionClick('open-folder');">
+                      <a id="open-folder-link" href="javascript:void(0)" title="Open a folder in JupyterLab" onclick="handleNewSessionClick('open-folder');" class="disabled">
                         <span class="action-icon">${openIcon}</span>
                         Open Folder...
                       </a>
@@ -368,8 +535,8 @@ export class WelcomeView {
                 
               </div>
 
-              <div class="col news-col"  style="border: 1px solid blue; padding: 10px; margin: 10px;">
-                <div class="large-logo" style="position: absolute; top: -200px; ">
+              <div class="col news-col">
+                <div class="large-logo" style="position: absolute; top: -250px; ">
                   ${studioLargeLogoSrc}
                 </div>
               </div>
@@ -379,10 +546,7 @@ export class WelcomeView {
           <div id="notification-panel">
             <div id="notification-panel-message">
             </div>
-            <div id="notification-panel-close" title="Close" onclick="closeNotificationPanel(event)">
-              <svg class="close-button" version="2.0">
-                <use href="#circle-xmark" />
-              </svg>
+            <div id="notification-panel-close" >         
             </div>
           </div>
 
@@ -577,12 +741,12 @@ export class WelcomeView {
 
           window.electronAPI.onInstallBundledPythonEnvStatus((status, detail) => {
             let message = status === 'STARTED' ?
-              'Installing Python environment...' :
+              'Installing Python environment, please wait ...' :
               status === 'CANCELLED' ?
               'Installation cancelled!' :
               status === 'FAILURE' ?
                 'Failed to install!' :
-              status === 'SUCCESS' ? 'Installation succeeded.' : '';
+              status === 'SUCCESS' ? '👍 Installation succeeded ' : '';
             if (detail) {
               message += \`[\$\{detail\}]\`;
             }
@@ -592,7 +756,7 @@ export class WelcomeView {
             if (status === 'SUCCESS') {
               setTimeout(() => {
                 showNotificationPanel('', true);
-              }, 2000);
+              }, 3000);
             }
           });
           </script>
@@ -657,6 +821,9 @@ export class WelcomeView {
 
   private async _onEnvironmentListUpdated() {
     console.log('onSetNotificationMessage');
+
+    
+
     this._registry
       .getDefaultEnvironment()
       .then(() => {
@@ -667,12 +834,11 @@ export class WelcomeView {
         this.enableLocalServerActions(false);
         this.showNotification(
           `
-        <div>
-          <svg style="width: 20px; height: 20px; fill: orange; margin-right: 6px;">
-            <use href="#triangle-exclamation" />
-          </svg>
-        </div>
-        Python environment not found. <a href="javascript:void(0);" onclick="sendMessageToMain('${EventTypeMain.InstallBundledPythonEnv}')">Install using the bundled installer</a> or <a href="javascript:void(0);" onclick="sendMessageToMain('${EventTypeMain.ShowManagePythonEnvironmentsDialog}', 'settings')">Change the default Python environment</a>
+          
+        <h2>Python environment not set</h2>
+        <p>MLJAR Studio comes with a bundled Python environment. You need to set it only once, at first use. Please click the below install button and wait a while.</p>
+        <button type="button" class="install-button" onclick="sendMessageToMain('${EventTypeMain.InstallBundledPythonEnv}')">Install Python</button> 
+        
         `,
           true
         );

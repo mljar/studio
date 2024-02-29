@@ -165,15 +165,18 @@ Distributed under the terms of the Modified BSD License.
   <body class="active <%- isDarkTheme ? 'app-ui-dark' : '' %>">
     <div class="titlebar">
       <div id="app-title" class="app-title">JupyterLab</div>
+      
       <div id="right-widgets">
         <div id="server-button">
           <div id="server-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M64 32C28.7 32 0 60.7 0 96v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zM344 152c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24zm96-24c0 13.3-10.7 24-24 24s-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24zM64 288c-35.3 0-64 28.7-64 64v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V352c0-35.3-28.7-64-64-64H64zM344 408c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24zm104-24c0 13.3-10.7 24-24 24s-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+              <path d="M64 32C28.7 32 0 60.7 0 96v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zM344 152c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24zm96-24c0 13.3-10.7 24-24 24s-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24zM64 288c-35.3 0-64 28.7-64 64v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V352c0-35.3-28.7-64-64-64H64zM344 408c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24zm104-24c0 13.3-10.7 24-24 24s-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24z"/></svg>
             <div id="server-notification-badge"></div>
           </div>
           <div id="server-label"></div>
         </div>
-        <div id="menu-button" title="Show Menu">
+        <!--<div id="menu-button" title="Show Menu">
           <svg
             width="18px"
             height="18px"
@@ -189,7 +192,7 @@ Distributed under the terms of the Modified BSD License.
               d="M4,10h24c1.104,0,2-0.896,2-2s-0.896-2-2-2H4C2.896,6,2,6.896,2,8S2.896,10,4,10z M28,14H4c-1.104,0-2,0.896-2,2  s0.896,2,2,2h24c1.104,0,2-0.896,2-2S29.104,14,28,14z M28,22H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h24c1.104,0,2-0.896,2-2  S29.104,22,28,22z"
             />
           </svg>
-        </div>
+        </div>-->
         <div id="control-box" class="control-box">
           <div id="minimize-button" class="control-box-button" title="Minimize">
             <svg viewBox='0 0 10.2 1'><rect x='0' y='50%' width='10.2' height='1'/></svg>
@@ -204,7 +207,7 @@ Distributed under the terms of the Modified BSD License.
             <svg viewBox='0 0 10 10'><polygon points='10.2,0.7 9.5,0 5.1,4.4 0.7,0 0,0.7 4.4,5.1 0,9.5 0.7,10.2 5.1,5.8 9.5,10.2 10.2,9.5 5.8,5.1'/></svg>
           </div>
         </div>
-      </div>
+      </div>-->
     </div>
     <script>
       const appTitle = document.getElementById('app-title');
@@ -212,7 +215,7 @@ Distributed under the terms of the Modified BSD License.
       const serverNotificationBadge = document.getElementById('server-notification-badge');
       const serverIcon = document.getElementById('server-icon');
       const serverLabel = document.getElementById('server-label');
-      const menuButton = document.getElementById('menu-button');
+      //const menuButton = document.getElementById('menu-button');
       const minimizeButton = document.getElementById('minimize-button');
       const maximizeButton = document.getElementById('maximize-button');
       const restoreButton = document.getElementById('restore-button');
@@ -242,10 +245,10 @@ Distributed under the terms of the Modified BSD License.
         serverNotificationBadge.style.display = show ? 'inline-block' : 'none';
       });
 
-      menuButton.onclick = (ev) => {
-        ev.stopPropagation();
-        window.electronAPI.showAppContextMenu();
-      };
+      // menuButton.onclick = (ev) => {
+      //   ev.stopPropagation();
+      //   window.electronAPI.showAppContextMenu();
+      // };
 
       minimizeButton.onclick = (ev) => {
         ev.stopPropagation();
