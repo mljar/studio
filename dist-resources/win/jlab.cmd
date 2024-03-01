@@ -1,2 +1,2 @@
 @echo off
-call JupyterLab.exe %*
+call mljar-studio.exe %*

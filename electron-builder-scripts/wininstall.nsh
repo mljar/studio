@@ -331,8 +331,8 @@ FunctionEnd
 
 !macro preInit
 	SetRegView 64
-	WriteRegExpandStr HKLM "${INSTALL_REGISTRY_KEY}" InstallLocation "C:\JupyterLab"
-	WriteRegExpandStr HKCU "${INSTALL_REGISTRY_KEY}" InstallLocation "C:\JupyterLab"
+	WriteRegExpandStr HKLM "${INSTALL_REGISTRY_KEY}" InstallLocation "C:\mljar-studio"
+	WriteRegExpandStr HKCU "${INSTALL_REGISTRY_KEY}" InstallLocation "C:\mljar-studio"
 !macroend
 
 !macro customInstall

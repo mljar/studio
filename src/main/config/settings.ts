@@ -136,7 +136,7 @@ export class UserSettings {
 
       /* making themes workspace overridable is not feasible.
       When app has multiple windows, different window titlebars shouldn't have different themes.
-      Also, JupyterLab theme is stored as user settings in {USER_DATA}/jupyterlab-desktop/lab/.
+      Also, JupyterLab theme is stored as user settings in {USER_DATA}/mljar-studio/lab/.
       An individual working-dir cannot have a different theme with common lab settings.
       */
       theme: new Setting<ThemeType>(ThemeType.System),

@@ -88,14 +88,14 @@ function redirectConsoleToLog() {
   }
 }
 
-const thisYear = new Date().getFullYear();
+// const thisYear = new Date().getFullYear();
 
 app.setAboutPanelOptions({
-  applicationName: 'JupyterLab Desktop',
+  applicationName: 'MLJAR Studio',
   applicationVersion: app.getVersion(),
   version: app.getVersion(),
-  website: 'https://jupyter.org/about.html',
-  copyright: `© 2015-${thisYear}  Project Jupyter Contributors`
+  website: 'https://mljar.com',
+  copyright: `© MLJAR Sp. z o.o.`
 });
 
 // when a file is double clicked or dropped on the app icon on OS,

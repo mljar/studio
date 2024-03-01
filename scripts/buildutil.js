@@ -53,7 +53,7 @@ if (cli.flags.checkVersionMatch) {
   }
 
   const appVersion = pkgjsonFileData['version'];
-  console.log(`JupyterLab Desktop version: ${appVersion}`);
+  console.log(`MLJAR Studio version: ${appVersion}`);
 
   // check JupyterLab version bundled
   const bundledEnvData = yaml.load(

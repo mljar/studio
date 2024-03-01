@@ -409,7 +409,7 @@ export function markEnvironmentAsJupyterInstalled(
   const envInstallInfoPath = jupyterEnvInstallInfoPathForEnvPath(envPath);
 
   const data = {
-    installer: 'jupyterlab-desktop',
+    installer: 'mljar-studio',
     ...(extraData || {})
   };
 
@@ -638,12 +638,12 @@ export function getLogFilePath(processType: 'main' | 'renderer' = 'main') {
     case 'darwin':
       return path.join(
         getUserHomeDir(),
-        `/Library/Logs/jupyterlab-desktop/${processType}.log`
+        `/Library/Logs/mljar-studio/${processType}.log`
       );
     default:
       return path.join(
         getUserHomeDir(),
-        `/.config/jupyterlab-desktop/logs/${processType}.log`
+        `/.config/mljar-studio/logs/${processType}.log`
       );
   }
 }
