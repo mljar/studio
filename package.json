@@ -1,7 +1,7 @@
 {
-  "name": "jupyterlab-desktop",
-  "version": "4.1.2-1",
-  "description": "JupyterLab Desktop",
+  "name": "mljar-studio",
+  "version": "0.0.1",
+  "description": "MLJAR Studio",
   "main": "./build/out/main/main.js",
   "scripts": {
     "start": "electron .",
@@ -56,8 +56,8 @@
     "update-ufuzzy": "shx cp node_modules/@leeoniya/ufuzzy/dist/uFuzzy.iife.min.js src/assets/"
   },
   "build": {
-    "appId": "org.jupyter.jupyterlab-desktop",
-    "productName": "JupyterLab",
+    "appId": "org.mljar.studio",
+    "productName": "MLJAR Studio",
     "artifactName": "${productName}.${ext}",
     "directories": {
       "buildResources": "dist-resources"
@@ -160,16 +160,16 @@
     }
   },
   "author": {
-    "name": "Project Jupyter",
-    "email": "project.jupyter@gmail.com",
-    "url": "http://jupyter.org"
+    "name": "MLJAR Sp. z o.o.",
+    "email": "contact@mljar.com",
+    "url": "https://mljar.com"
   },
   "bugs": {
-    "url": "https://github.com/jupyterlab/jupyterlab-desktop/issues"
+    "url": "https://github.com/mljar/support/issues"
   },
-  "homepage": "https://github.com/jupyterlab/jupyterlab-desktop#readme",
-  "repository": "https://github.com/jupyterlab/jupyterlab-desktop",
-  "license": "BSD-3-Clause",
+  "homepage": "https://mljar.com",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
     "@jupyter-notebook/web-components": "0.9.1",
     "@types/ejs": "^3.1.0",

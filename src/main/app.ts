@@ -1239,6 +1239,8 @@ export class JupyterApplication implements IApplication, IDisposable {
   }
 
   checkForUpdates(showDialog: 'on-new-version' | 'always') {
+    // updates disabled
+    return;
     fetch(
       'https://github.com/jupyterlab/jupyterlab-desktop/releases/latest/download/latest.yml'
     )
@@ -1268,6 +1270,7 @@ export class JupyterApplication implements IApplication, IDisposable {
         }
         console.error('Failed to check for updates:', error);
       });
+
   }
 
   private _quit(): void {

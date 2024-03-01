@@ -185,6 +185,9 @@ if (cli.flags.updateBinarySignList) {
 }
 
 if (cli.flags.copyExtrasToBundledEnv) {
+  console.log('-------------------------');
+  console.log('Did you remember to copy piece of code wheel package?');
+  console.log('-------------------------');
   const envExtrasDir = path.resolve('env_installer', 'extras');
   const envInstallerDir = path.resolve('env_installer', 'jlab_server');
 

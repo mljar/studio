@@ -107,6 +107,7 @@ export function getBundledPythonPath(): string {
 }
 
 export function isDarkTheme(themeType: string) {
+  return false;
   if (themeType === 'light') {
     return false;
   } else if (themeType === 'dark') {
@@ -282,6 +283,7 @@ export async function installCondaPackEnvironment(
   installPath: string,
   listener?: ICondaPackEnvironmentInstallListener
 ): Promise<boolean> {
+  console.log('Install Python environment');
   const isBundledInstaller = condaPackPath === getBundledEnvInstallerPath();
   // eslint-disable-next-line no-async-promise-executor
   return new Promise<boolean>(async (resolve, reject) => {
@@ -313,6 +315,8 @@ export async function installCondaPackEnvironment(
 
     listener?.onInstallStatus(EnvironmentInstallStatus.Started);
 
+    console.log('Unpack conda env ...');
+
     try {
       fs.mkdirSync(installPath, { recursive: true });
       await tar.x({ C: installPath, file: condaPackPath });
@@ -342,17 +346,46 @@ export async function installCondaPackEnvironment(
         installPath
       )}\n${unpackCommand}`;
     }
-
+    
     const installerProc = exec(unpackCommand, {
       shell: isWin ? 'cmd.exe' : '/bin/bash'
     });
 
     installerProc.on('exit', (exitCode: number) => {
       if (exitCode === 0) {
-        listener?.onInstallStatus(EnvironmentInstallStatus.Success);
-        resolve(true);
+
+        console.log('Install Piece of Code ...');
+
+        const pocInstallCommand = isWin
+          ? `${installPath}\\bin\\python3 -m pip install --force-reinstall ${installPath}\\pieceofcode-0.1.0-py3-none-any.whl`
+          : `${installPath}/bin/python3 -m pip install --force-reinstall ${installPath}/pieceofcode-0.1.0-py3-none-any.whl`;
+
+        const pocInstallerProc = exec(pocInstallCommand, {
+          shell: isWin ? 'cmd.exe' : '/bin/bash'
+        });
+
+        pocInstallerProc.on('error', (err: Error) => {
+          listener?.onInstallStatus(EnvironmentInstallStatus.Failure, `Error during Piece of Code installation. ${err.message}`);
+          log.error(err);
+          reject();
+          return;
+        });
+
+        pocInstallerProc.on('exit', (pocExitCode: number) => {
+          if (pocExitCode === 0) {
+            listener?.onInstallStatus(EnvironmentInstallStatus.Success);
+            resolve(true);
+          } else {
+            const message = `Piece of Code installer exit: ${pocExitCode}`;
+            listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
+            log.error(new Error(message));
+            reject();
+            return;
+          }
+        });
+
       } else {
-        const message = `Installer Exit: ${exitCode}`;
+        const message = `Installer exit: ${exitCode}`;
         listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
         log.error(new Error(message));
         reject();
@@ -660,8 +693,8 @@ export function openDirectoryInExplorer(dirPath: string): boolean {
     platform === 'darwin'
       ? 'open'
       : platform === 'win32'
-      ? 'explorer'
-      : 'xdg-open';
+        ? 'explorer'
+        : 'xdg-open';
 
   exec(`${openCommand} "${dirPath}"`);
 
