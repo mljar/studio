@@ -82,7 +82,8 @@ export enum EventTypeMain {
   CopySessionInfoToClipboard = 'copy-session-info-to-clipboard',
   RestartSession = 'restart-session',
   SetSettings = 'set-settings',
-  SetupCLICommandWithElevatedRights = 'setup-cli-command'
+  SetupCLICommandWithElevatedRights = 'setup-cli-command',
+  RecipeOpenFile = 'recipeOpenFile',
 }
 
 // events sent to Renderer process
