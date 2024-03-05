@@ -6,12 +6,11 @@ dependencies:
   - ipywidgets >= 8.0.1
   - jupyterlab 4.1.2
   - ipympl >= 0.8.2
-  - matplotlib-base
   - pip
   - python 3.11*
 platforms:
-  - linux-64
-  - linux-aarch64
-  - osx-64
-  - osx-arm64
+  # - linux-64
+  # - linux-aarch64
+  # - osx-64
+  # - osx-arm64
   - win-64
