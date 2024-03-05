@@ -164,7 +164,7 @@ Distributed under the terms of the Modified BSD License.
 
   <body class="active <%- isDarkTheme ? 'app-ui-dark' : '' %>">
     <div class="titlebar">
-      <div id="app-title" class="app-title">JupyterLab</div>
+      <div id="app-title" class="app-title">MLJAR Studio</div>
       
       <div id="right-widgets">
         <div id="server-button">
@@ -222,7 +222,7 @@ Distributed under the terms of the Modified BSD License.
       const closeButton = document.getElementById('close-button');
 
       window.electronAPI.onSetTitle((title) => {
-        appTitle.innerText = title;
+        appTitle.innerText = title.replace("JupyterLab", "MLJAR Studio");
       });
 
       window.electronAPI.onSetActive((active) => {
