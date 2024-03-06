@@ -100,7 +100,7 @@ https://conda.anaconda.org/conda-forge/noarch/pure_eval-0.2.2-pyhd8ed1ab_0.tar.b
 https://conda.anaconda.org/conda-forge/win-64/pycosat-0.6.6-py311ha68e1ae_0.conda#beaebb9595065ca64bcce57a6b3ab2fd
 https://conda.anaconda.org/conda-forge/noarch/pycparser-2.21-pyhd8ed1ab_0.tar.bz2#076becd9e05608f8dc72757d5f3a91ff
 https://conda.anaconda.org/conda-forge/noarch/pygments-2.17.2-pyhd8ed1ab_0.conda#140a7f159396547e9799aa98f9f0742e
-https://conda.anaconda.org/conda-forge/noarch/pyparsing-3.1.1-pyhd8ed1ab_0.conda#176f7d56f0cfe9008bdf1bccd7de02fb
+https://conda.anaconda.org/conda-forge/noarch/pyparsing-3.1.2-pyhd8ed1ab_0.conda#b9a4dacf97241704529131a0dfc0494f
 https://conda.anaconda.org/conda-forge/noarch/python-fastjsonschema-2.19.1-pyhd8ed1ab_0.conda#4d3ceee3af4b0f9a1f48f57176bf8625
 https://conda.anaconda.org/conda-forge/noarch/python-json-logger-2.0.7-pyhd8ed1ab_0.conda#a61bf9ec79426938ff785eb69dbb1960
 https://conda.anaconda.org/conda-forge/noarch/pytz-2024.1-pyhd8ed1ab_0.conda#3eeeeb9e4827ace8c0c1419c85d590ad
@@ -209,7 +209,7 @@ https://conda.anaconda.org/conda-forge/noarch/nbconvert-core-7.16.2-pyhd8ed1ab_0
 https://conda.anaconda.org/conda-forge/noarch/jupyter_server-2.13.0-pyhd8ed1ab_0.conda#e242df505f194c4932fbb840a99207e2
 https://conda.anaconda.org/conda-forge/win-64/matplotlib-base-3.8.3-py311h6e989c2_0.conda#47fb1d03ff14dcf37bed939b9bf6b72b
 https://conda.anaconda.org/conda-forge/noarch/ipympl-0.9.3-pyhd8ed1ab_0.conda#da113e1ecd782afd5ed2f7b5187aaea8
-https://conda.anaconda.org/conda-forge/noarch/jupyter-lsp-2.2.3-pyhd8ed1ab_0.conda#109a271f538a41ff46e9033fdd71c335
+https://conda.anaconda.org/conda-forge/noarch/jupyter-lsp-2.2.4-pyhd8ed1ab_0.conda#91f93e1ebf6535be518715432d89fd92
 https://conda.anaconda.org/conda-forge/noarch/jupyterlab_server-2.25.3-pyhd8ed1ab_0.conda#78f28bcd22aadca6ec8eaff4319e6610
 https://conda.anaconda.org/conda-forge/noarch/notebook-shim-0.2.4-pyhd8ed1ab_0.conda#3d85618e2c97ab896b5b5e298d32b5b3
 https://conda.anaconda.org/conda-forge/noarch/jupyterlab-4.1.2-pyhd8ed1ab_0.conda#ffcabe653273b2b81a30c82d625bd5e8

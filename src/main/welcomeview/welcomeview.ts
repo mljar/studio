@@ -375,7 +375,6 @@ export class WelcomeView {
               text-align: center;
               font-size: .875rem;
               line-height: 1.25rem;
-              font-weight: 500;
               --tw-text-opacity: 1;
               color: rgb(255 255 255/var(--tw-text-opacity));
             }
@@ -455,7 +454,7 @@ export class WelcomeView {
               text-align: center;
               font-size: .875rem;
               line-height: 1.25rem;
-              font-weight: 500;
+              
               --tw-text-opacity: 1;
               color: rgb(255 255 255/var(--tw-text-opacity));
               background-image: linear-gradient(to bottom left,var(--tw-gradient-stops));
