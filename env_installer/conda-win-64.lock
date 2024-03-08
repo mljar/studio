@@ -4,7 +4,7 @@
 @EXPLICIT
 https://conda.anaconda.org/conda-forge/win-64/ca-certificates-2024.2.2-h56e8100_0.conda#63da060240ab8087b60d1357051ea7d6
 https://conda.anaconda.org/conda-forge/win-64/intel-openmp-2024.0.0-h57928b3_49841.conda#e3255c8cdaf1d52f15816d1970f9c77a
-https://conda.anaconda.org/conda-forge/win-64/libexpat-2.5.0-h63175ca_1.conda#636cc3cbbd2e28bcfd2f73b2044aac2c
+https://conda.anaconda.org/conda-forge/win-64/libexpat-2.6.1-h63175ca_0.conda#6d663a0052380f703665a290e5fbb922
 https://conda.anaconda.org/conda-forge/win-64/msys2-conda-epoch-20160418-1.tar.bz2#b0309b72560df66f71a9d5e34a5efdfa
 https://conda.anaconda.org/conda-forge/noarch/pybind11-abi-4-hd8ed1ab_3.tar.bz2#878f923dd6acc8aeb47a75da6c4098be
 https://conda.anaconda.org/conda-forge/win-64/python_abi-3.11-4_cp311.conda#70513332c71b56eace4ee6441e66c012
@@ -73,7 +73,7 @@ https://conda.anaconda.org/conda-forge/noarch/hpack-4.0.0-pyh9f0ad1d_0.tar.bz2#9
 https://conda.anaconda.org/conda-forge/noarch/hyperframe-6.0.1-pyhd8ed1ab_0.tar.bz2#9f765cbfab6870c8435b9eefecd7a1f4
 https://conda.anaconda.org/conda-forge/noarch/idna-3.6-pyhd8ed1ab_0.conda#1a76f09108576397c41c0b0c5bd84134
 https://conda.anaconda.org/conda-forge/noarch/ipython_genutils-0.2.0-py_1.tar.bz2#5071c982548b3a20caf70462f04f5287
-https://conda.anaconda.org/conda-forge/noarch/json5-0.9.20-pyhd8ed1ab_0.conda#b60283c4a544fafa39561956d8bbc771
+https://conda.anaconda.org/conda-forge/noarch/json5-0.9.22-pyhd8ed1ab_0.conda#2fa51897d3aee2fe1636b98d9a6236dc
 https://conda.anaconda.org/conda-forge/win-64/jsonpointer-2.4-py311h1ea47a8_3.conda#db8fc59f9215e668e602f769d0bf67bb
 https://conda.anaconda.org/conda-forge/noarch/jupyterlab_widgets-3.0.10-pyhd8ed1ab_0.conda#16b73b2c4ff7dda8bbecf88aadfe2027
 https://conda.anaconda.org/conda-forge/win-64/kiwisolver-1.4.5-py311h005e61a_1.conda#de0b3f37405f8386ac8be18fdc06ff92
@@ -145,8 +145,8 @@ https://conda.anaconda.org/conda-forge/win-64/cffi-1.16.0-py311ha68e1ae_0.conda#
 https://conda.anaconda.org/conda-forge/noarch/comm-0.2.1-pyhd8ed1ab_0.conda#f4385072f4909bc974f6675a36e76796
 https://conda.anaconda.org/conda-forge/noarch/h11-0.14.0-pyhd8ed1ab_0.tar.bz2#b21ed0883505ba1910994f1df031a428
 https://conda.anaconda.org/conda-forge/noarch/h2-4.1.0-pyhd8ed1ab_0.tar.bz2#b748fbf7060927a6e82df7cb5ee8f097
-https://conda.anaconda.org/conda-forge/noarch/importlib-metadata-7.0.1-pyha770c72_0.conda#746623a787e06191d80a2133e5daff17
-https://conda.anaconda.org/conda-forge/noarch/importlib_resources-6.1.2-pyhd8ed1ab_0.conda#6f4399795892835bd192ea210ca69447
+https://conda.anaconda.org/conda-forge/noarch/importlib-metadata-7.0.2-pyha770c72_0.conda#b050a4bb0e90ebd6e7fa4093d6346867
+https://conda.anaconda.org/conda-forge/noarch/importlib_resources-6.1.3-pyhd8ed1ab_0.conda#b865eadcceebf641fa833ee086756e8b
 https://conda.anaconda.org/conda-forge/noarch/jedi-0.19.1-pyhd8ed1ab_0.conda#81a3be0b2023e1ea8555781f0ad904a2
 https://conda.anaconda.org/conda-forge/noarch/jinja2-3.1.3-pyhd8ed1ab_0.conda#e7d8df6509ba635247ff9aea31134262
 https://conda.anaconda.org/conda-forge/noarch/jsonpatch-1.33-pyhd8ed1ab_0.conda#bfdb7c5c6ad1077c82a69a8642c87aff
@@ -176,7 +176,7 @@ https://conda.anaconda.org/conda-forge/noarch/arrow-1.3.0-pyhd8ed1ab_0.conda#b77
 https://conda.anaconda.org/conda-forge/win-64/fonttools-4.49.0-py311ha68e1ae_0.conda#d13525346bdf13be1ea57172754e2daf
 https://conda.anaconda.org/conda-forge/noarch/fqdn-1.5.1-pyhd8ed1ab_0.tar.bz2#642d35437078749ef23a5dca2c9bb1f3
 https://conda.anaconda.org/conda-forge/noarch/httpcore-1.0.4-pyhd8ed1ab_0.conda#20f047662cf4fa8b97836111df87dbb4
-https://conda.anaconda.org/conda-forge/noarch/importlib_metadata-7.0.1-hd8ed1ab_0.conda#4a2f43a20fa404b998859c6a470ba316
+https://conda.anaconda.org/conda-forge/noarch/importlib_metadata-7.0.2-hd8ed1ab_0.conda#d11132727a247f2c1998779a2af743a1
 https://conda.anaconda.org/conda-forge/noarch/jsonschema-specifications-2023.12.1-pyhd8ed1ab_0.conda#a0e4efb5f35786a05af4809a2fb1f855
 https://conda.anaconda.org/conda-forge/noarch/jupyter_server_terminals-0.5.2-pyhd8ed1ab_0.conda#a0152d13c9deb13639fc84df884d50b6
 https://conda.anaconda.org/conda-forge/win-64/libmambapy-1.5.7-py311h0317a69_0.conda#2cf175cce0c9a9a7636f61011247c4a7

@@ -36,9 +36,6 @@ export class WelcomeView {
       this._isDarkTheme ? DarkThemeBGColor : LightThemeBGColor
     );
 
-    // const jupyterlabWordmarkSrc = fs.readFileSync(
-    //   path.join(__dirname, '../../../app-assets/jupyterlab-wordmark.svg')
-    // );
     const studioLargeLogoSrc = fs.readFileSync(
       path.join(__dirname, '../../../app-assets/studio-large-logo.svg')
     );
