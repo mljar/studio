@@ -1,6 +1,7 @@
 /* Based on https://kilianvalkhof.com/2019/electron/notarizing-your-electron-application/ */
 
-const { notarize } = require('electron-notarize');
+const { notarize } = require('@electron/notarize');
+require('dotenv').config();
 
 exports.default = async function notarizing(context) {
   const { electronPlatformName, appOutDir } = context;
@@ -17,6 +18,7 @@ exports.default = async function notarizing(context) {
     appBundleId: 'org.mljar.studio',
     appPath: `${appOutDir}/${appName}.app`,
     appleId: process.env.APPLEID,
-    appleIdPassword: process.env.APPLEIDPASS
+    appleIdPassword: process.env.APPLEIDPASS,
+    teamId: process.env.TEAMID
   });
 };
