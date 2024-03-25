@@ -9,7 +9,7 @@ export class UpdateDialog {
   constructor(options: UpdateDialog.IOptions) {
     this._window = new ThemedWindow({
       isDarkTheme: options.isDarkTheme,
-      title: 'Update',
+      title: 'New version available',
       width: 400,
       height: 180,
       resizable: false,
@@ -21,7 +21,7 @@ export class UpdateDialog {
         ? 'Error occurred while checking for updates!'
         : options.type === 'no-updates'
         ? 'There are no updates available.'
-        : `There is a new version available. Download the latest version from <a href="javascript:void(0)" onclick='handleReleasesLink(this);'>the Releases page</a>.`;
+        : `There is a new version available. Download the latest version from <a href="javascript:void(0)" onclick='handleReleasesLink(this);'>https://licenses.mljar.com</a>.`;
 
     const template = `
       <style>

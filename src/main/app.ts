@@ -12,7 +12,6 @@ import {
 import log from 'electron-log';
 import { IRegistry, Registry } from './registry';
 import fetch from 'node-fetch';
-import * as yaml from 'js-yaml';
 import * as semver from 'semver';
 import * as fs from 'fs';
 import {
@@ -646,16 +645,22 @@ export class JupyterApplication implements IApplication, IDisposable {
     );
 
     this._evm.registerEventHandler(
+      // handle update app click
       EventTypeMain.LaunchInstallerDownloadPage,
       () => {
+        console.log('Update to new version');
         shell.openExternal(
-          'https://github.com/jupyterlab/jupyterlab-desktop/releases'
+          'https://licenses.mljar.com'
         );
       }
     );
 
     this._evm.registerEventHandler(EventTypeMain.LaunchAboutJupyterPage, () => {
+
+      console.log('About ...')
       shell.openExternal('https://jupyter.org/about.html');
+
+
     });
 
     this._evm.registerEventHandler(
@@ -1085,8 +1090,8 @@ export class JupyterApplication implements IApplication, IDisposable {
         const invalidInputMessage = invalidCharInputRegex.test(envPath)
           ? 'Invalid environment name input'
           : invalidCharInputRegex.test(packages)
-          ? 'Invalid package list input'
-          : '';
+            ? 'Invalid package list input'
+            : '';
 
         if (invalidInputMessage) {
           event.sender.send(
@@ -1231,7 +1236,7 @@ export class JupyterApplication implements IApplication, IDisposable {
     type: 'updates-available' | 'error' | 'no-updates'
   ) {
     const dialog = new UpdateDialog({
-      isDarkTheme: isDarkTheme(userSettings.getValue(SettingType.theme)),
+      isDarkTheme: false, //isDarkTheme(userSettings.getValue(SettingType.theme)),
       type
     });
 
@@ -1239,35 +1244,38 @@ export class JupyterApplication implements IApplication, IDisposable {
   }
 
   checkForUpdates(showDialog: 'on-new-version' | 'always') {
-    // updates disabled
-    return;
+    console.log('Check for updates');
     fetch(
-      'https://github.com/jupyterlab/jupyterlab-desktop/releases/latest/download/latest.yml'
+      'https://mljar.com/studio-releases.json'
     )
       .then(async response => {
         try {
-          const data = await response.text();
-          const latestReleaseData = yaml.load(data);
-          const latestVersion = (latestReleaseData as any).version;
+          const data = await response.json();
+          const latestVersion = data['currentVersion'];
           const currentVersion = app.getVersion();
           const newVersionAvailable =
             semver.compare(currentVersion, latestVersion) === -1;
-          if (showDialog === 'always' || newVersionAvailable) {
-            this._showUpdateDialog(
-              newVersionAvailable ? 'updates-available' : 'no-updates'
-            );
+          // console.log({ latestVersion, currentVersion, newVersionAvailable });
+          if (newVersionAvailable) {
+            this._showUpdateDialog('updates-available');
           }
+          // if (showDialog === 'always' || newVersionAvailable) {
+          //   this._showUpdateDialog(
+          //     newVersionAvailable ? 'updates-available' : 'no-updates'
+          //   );
+          // }
+
         } catch (error) {
-          if (showDialog === 'always') {
-            this._showUpdateDialog('error');
-          }
+          // if (showDialog === 'always') {
+          //   this._showUpdateDialog('error');
+          // }
           console.error('Failed to check for updates:', error);
         }
       })
       .catch(error => {
-        if (showDialog === 'always') {
-          this._showUpdateDialog('error');
-        }
+        // if (showDialog === 'always') {
+        //   this._showUpdateDialog('error');
+        // }
         console.error('Failed to check for updates:', error);
       });
 
@@ -1279,7 +1287,7 @@ export class JupyterApplication implements IApplication, IDisposable {
         process.exit();
       })
       .catch(err => {
-        log.error(new Error('JupyterLab could not close successfully'));
+        log.error(new Error('MLJAR Studio could not close successfully'));
         process.exit();
       });
   }

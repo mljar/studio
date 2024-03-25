@@ -124,12 +124,12 @@ export class SessionWindow implements IDisposable {
       minWidth: 400,
       minHeight: 300,
       show: false,
-      title: 'JupyterLab',
+      title: 'MLJAR Studio',
       titleBarStyle: 'hidden',
       frame: process.platform === 'darwin',
       backgroundColor: this._isDarkTheme ? DarkThemeBGColor : LightThemeBGColor,
       webPreferences: {
-        devTools: true
+        devTools: false
       }
     });
     this._window.webContents.openDevTools();
