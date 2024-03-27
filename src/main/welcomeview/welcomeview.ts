@@ -816,9 +816,7 @@ export class WelcomeView {
   }
 
   private async _onEnvironmentListUpdated() {
-    console.log('onSetNotificationMessage');
-
-    
+    console.log('_onEnvironmentListUpdated');
 
     this._registry
       .getDefaultEnvironment()

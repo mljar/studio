@@ -78,6 +78,7 @@ export class Registry implements IRegistry, IDisposable {
       ...appData.discoveredPythonEnvs,
       ...appData.userSetPythonEnvs
     ].filter(env => this._pathExistsSync(env.path));
+    console.log(this._environments);
 
     // initialize default environment to user set or bundled
     // TODO: try to use userSettings.pythonPath and bundled python path separately
@@ -86,13 +87,14 @@ export class Registry implements IRegistry, IDisposable {
     if (pythonPath === '') {
       pythonPath = getBundledPythonPath();
     }
+    console.log(pythonPath);
 
     // TODO: validate appData.condaPath and appData.systemPythonPath. getCondaPath instead of appData.condaPath
     // try to set condaPath from CONDA_EXE
 
     try {
       const defaultEnv = this._resolveEnvironmentSync(pythonPath);
-
+      console.log({defaultEnv});
       if (defaultEnv) {
         this._defaultEnv = defaultEnv;
         // if default env is conda root, then set its conda executable as conda path
@@ -108,7 +110,7 @@ export class Registry implements IRegistry, IDisposable {
     } catch (error) {
       //
     }
-
+    
     // try to set default env from discovered pythonPath
     if (!this._defaultEnv && appData.pythonPath) {
       try {
@@ -174,7 +176,7 @@ export class Registry implements IRegistry, IDisposable {
       let windowRegEnvironments = this._loadWindowsRegistryEnvironments();
       allEnvironments.push(windowRegEnvironments);
     }
-
+    console.log({allEnvironments});
     this._registryBuilt = Promise.all<IPythonEnvironment[]>(allEnvironments)
       .then(async environments => {
         let discoveredEnvs = [].concat(...environments);
@@ -195,7 +197,8 @@ export class Registry implements IRegistry, IDisposable {
         this._discoveredEnvironments = discoveredEnvs;
 
         this._updateEnvironments();
-
+        console.log('_registryBuilt');
+        console.log(this._environments);
         if (!this._defaultEnv && this._environments.length > 0) {
           this._defaultEnv = this._environments[0];
           if (!appData.pythonPath) {

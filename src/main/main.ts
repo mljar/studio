@@ -129,7 +129,8 @@ function setupJLabCommand() {
   if (process.platform !== 'darwin') {
     return;
   }
-
+  console.log('setupJLabCommand', jlabCLICommandIsSetup());
+  //return;
   if (jlabCLICommandIsSetup()) {
     return;
   }

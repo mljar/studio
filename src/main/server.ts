@@ -647,6 +647,7 @@ export class JupyterServerFactory implements IServerFactory, IDisposable {
   async createFreeServer(
     opts?: JupyterServer.IOptions
   ): Promise<JupyterServerFactory.IFactoryItem> {
+    console.log('createFreeServer');
     let item: JupyterServerFactory.IFactoryItem;
     let env: IPythonEnvironment;
 
@@ -773,6 +774,7 @@ export class JupyterServerFactory implements IServerFactory, IDisposable {
   private _createServer(
     opts: JupyterServer.IOptions
   ): JupyterServerFactory.IFactoryItem {
+    console.log('_createServer');
     let item: JupyterServerFactory.IFactoryItem = {
       factoryId: this._nextId++,
       server: new JupyterServer(opts),

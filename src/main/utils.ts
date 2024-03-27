@@ -15,8 +15,10 @@ import {
   execFile,
   ExecFileOptions,
   execFileSync,
-  execSync
+  //execSync
 } from 'child_process';
+
+import sudo from '@vscode/sudo-prompt';
 
 export const DarkThemeBGColor = '#212121';
 export const LightThemeBGColor = '#ffffff';
@@ -351,7 +353,15 @@ export async function installCondaPackEnvironment(
       shell: isWin ? 'cmd.exe' : '/bin/bash'
     });
 
-    installerProc.on('exit', (exitCode: number) => {
+    installerProc.on('exit', (procExitCode:number) => {
+    const jlabInstallCommand = 'conda install --yes -c conda-forge jupyterlab==4.1.2';
+
+    const jlabInstallerProc = exec(jlabInstallCommand, {
+      shell: isWin ? 'cmd.exe' : '/bin/bash'
+    });
+    
+
+    jlabInstallerProc.on('exit', (exitCode: number) => {
       if (exitCode === 0) {
 
         console.log('Install Piece of Code ...');
@@ -392,6 +402,7 @@ export async function installCondaPackEnvironment(
         return;
       }
     });
+  });
 
     installerProc.on('error', (err: Error) => {
       listener?.onInstallStatus(EnvironmentInstallStatus.Failure, err.message);
@@ -845,21 +856,37 @@ export async function setupJlabCLICommandWithElevatedRights(): Promise<
 export async function setupJlabCommandWithUserRights() {
   const symlinkPath = getJlabCLICommandSymlinkPath();
   const targetPath = getJlabCLICommandTargetPath();
+  console.log({symlinkPath, targetPath, 
+            targetExists: fs.existsSync(targetPath),
+            symlinkExists: fs.existsSync(symlinkPath)
+          });
 
   if (!fs.existsSync(targetPath)) {
     return;
   }
 
-  try {
-    if (!fs.existsSync(symlinkPath)) {
-      const cmd = `ln -s ${targetPath} ${symlinkPath}`;
-      execSync(cmd, { shell: '/bin/bash' });
-      fs.chmodSync(symlinkPath, 0o755);
+  const cmd1 = `ln -s ${targetPath} ${symlinkPath}`;
+  const cmd2 = `chmod 755 ${symlinkPath}`;
+  const cmd3 = `chmod 755 ${targetPath}`;
+  const cmd = `${cmd1} && ${cmd2} && ${cmd3}`;
+  sudo.exec(cmd, {name: 'MLJAR Studio'},
+    function(error, stdout, stderr) {
+      if (error) throw error;
+      console.log('stdout: ' + stdout);
     }
+  );
 
-    // after a DMG install, mode resets
-    fs.chmodSync(targetPath, 0o755);
-  } catch (error) {
-    log.error(error);
-  }
+
+  // try {
+  //   if (!fs.existsSync(symlinkPath)) {
+  //     const cmd = `ln -s ${targetPath} ${symlinkPath}`;
+  //     execSync(cmd, { shell: '/bin/bash' });
+  //     fs.chmodSync(symlinkPath, 0o755);
+  //   }
+
+  //   // after a DMG install, mode resets
+  //   fs.chmodSync(targetPath, 0o755);
+  // } catch (error) {
+  //   log.error(error);
+  // }
 }
