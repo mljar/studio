@@ -129,8 +129,8 @@ function setupJLabCommand() {
   if (process.platform !== 'darwin') {
     return;
   }
-  console.log('setupJLabCommand', jlabCLICommandIsSetup());
-  //return;
+  console.log('disable setupJLabCommand', jlabCLICommandIsSetup());
+  return;
   if (jlabCLICommandIsSetup()) {
     return;
   }
@@ -193,10 +193,10 @@ app.on('ready', async () => {
 
   try {
     await handleMultipleAppInstances();
-    await updateBundledPythonEnvInstallation();
+    await updateBundledPythonEnvInstallation(); // disabled
     redirectConsoleToLog();
     setApplicationMenu();
-    setupJLabCommand();
+    setupJLabCommand(); // disabled
     createPythonEnvsDirectory();
     argv.cwd = process.cwd();
     jupyterApp = new JupyterApplication((argv as unknown) as ICLIArguments);
@@ -337,6 +337,8 @@ async function needToUpdateBundledPythonEnvInstallation(): Promise<boolean> {
 }
 
 async function updateBundledPythonEnvInstallation() {
+  console.log('Disable update bundled Python env');
+  return;
   if (!(await needToUpdateBundledPythonEnvInstallation())) {
     return;
   }

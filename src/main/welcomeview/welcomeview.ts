@@ -5,8 +5,8 @@ import { BrowserView } from 'electron';
 import { DarkThemeBGColor, getUserHomeDir, LightThemeBGColor } from '../utils';
 import * as path from 'path';
 import * as fs from 'fs';
-import fetch from 'node-fetch';
-import { XMLParser } from 'fast-xml-parser';
+//import fetch from 'node-fetch';
+//import { XMLParser } from 'fast-xml-parser';
 import { SettingType, userSettings } from '../config/settings';
 import { appData, INewsItem } from '../config/appdata';
 import { IRegistry } from '../registry';
@@ -840,10 +840,12 @@ export class WelcomeView {
   }
 
   private _updateNewsList() {
+    WelcomeView._newsListFetched = true;
+    /*
     if (WelcomeView._newsListFetched) {
       return;
     }
-
+    
     const newsFeedUrl = 'https://blog.jupyter.org/feed';
     const maxNewsToShow = 10;
 
@@ -878,6 +880,7 @@ export class WelcomeView {
       .catch(error => {
         console.error('Failed to fetch news list:', error);
       });
+      */
   }
 
   updateRecentSessionList(resetCollapseState: boolean) {

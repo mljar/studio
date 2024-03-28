@@ -298,12 +298,12 @@ export class JupyterServer {
           }
         };
 
-        console.debug(
-          `Server launch parameters:\n  [script]: ${launchScriptPath}\n  [options]: ${JSON.stringify(
-            execOptions
-          )}`
-        );
-
+        // console.debug(
+        //   `Server launch parameters:\n  [script]: ${launchScriptPath}\n  [options]: ${JSON.stringify(
+        //     execOptions
+        //   )}`
+        // );
+        console.debug(`Server launch parameters:\n  [script]: ${launchScriptPath}`);
         this._nbServer = execFile(launchScriptPath, execOptions);
 
         Promise.race([

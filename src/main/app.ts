@@ -274,7 +274,7 @@ export class JupyterApplication implements IApplication, IDisposable {
 
     // create a server in advance
     this._serverFactory.createFreeServer().catch(error => {
-      console.error('Failed to create free server', error);
+      console.error('Failed to create computing server', error);
     });
     this._registerListeners();
 

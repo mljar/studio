@@ -1,10 +1,11 @@
-import { basename, join, normalize } from 'path';
-import * as path from 'path';
+// import { basename, join, normalize } from 'path';
+import { join } from 'path';
+//import * as path from 'path';
 import * as fs from 'fs';
 import * as semver from 'semver';
 import log from 'electron-log';
-const which = require('which');
-const WinRegistry = require('winreg');
+// const which = require('which');
+// const WinRegistry = require('winreg');
 import { ISignal, Signal } from '@lumino/signaling';
 import {
   IDisposable,
@@ -12,35 +13,35 @@ import {
   IPythonEnvironment,
   IPythonEnvResolveError,
   IPythonEnvValidateResult,
-  IVersionContainer,
+  // IVersionContainer,
   PythonEnvResolveErrorType
 } from './tokens';
 import {
   envPathForPythonPath,
-  getBundledPythonEnvPath,
+  // getBundledPythonEnvPath,
   getBundledPythonPath,
   getEnvironmentPath,
   getUserHomeDir,
   isBaseCondaEnv,
   isCondaEnv,
   isPortInUse,
-  pythonPathForEnvPath,
+  // pythonPathForEnvPath,
   runCommand,
   versionWithoutSuffix
 } from './utils';
-import { SettingType, userSettings } from './config/settings';
+// import { SettingType, userSettings } from './config/settings';
 import { appData } from './config/appdata';
 import {
-  condaEnvPathForCondaExePath,
+  // condaEnvPathForCondaExePath,
   condaExePathForEnvPath,
   environmentSatisfiesRequirements,
   getCondaChannels,
   getEnvironmentInfoFromPythonPath,
   getEnvironmentInfoFromPythonPathSync,
-  getPythonEnvsDirectory,
-  IJupyterEnvRequirement,
+  // getPythonEnvsDirectory,
+  // IJupyterEnvRequirement,
   JUPYTER_ENV_REQUIREMENTS,
-  updateDiscoveredPythonPaths,
+  // updateDiscoveredPythonPaths,
   validatePythonPath
 } from './env';
 import { app } from 'electron';
@@ -83,24 +84,30 @@ export class Registry implements IRegistry, IDisposable {
     // initialize default environment to user set or bundled
     // TODO: try to use userSettings.pythonPath and bundled python path separately
     // because userSettings.pythonPath might be invalid but bundled one may be valid
-    let pythonPath = userSettings.getValue(SettingType.pythonPath);
-    if (pythonPath === '') {
-      pythonPath = getBundledPythonPath();
-    }
+    // 
+    // let pythonPath = userSettings.getValue(SettingType.pythonPath);
+    // if (pythonPath === '') {
+    //   pythonPath = getBundledPythonPath();
+    // }
+    const pythonPath = getBundledPythonPath();
+    appData.pythonPath = pythonPath
+
     console.log(pythonPath);
+    console.log(getBundledPythonPath());
 
     // TODO: validate appData.condaPath and appData.systemPythonPath. getCondaPath instead of appData.condaPath
     // try to set condaPath from CONDA_EXE
 
     try {
       const defaultEnv = this._resolveEnvironmentSync(pythonPath);
-      console.log({defaultEnv});
+      console.log({ defaultEnv });
       if (defaultEnv) {
         this._defaultEnv = defaultEnv;
         // if default env is conda root, then set its conda executable as conda path
         if (
-          defaultEnv.type === IEnvironmentType.CondaRoot &&
-          !appData.condaPath
+          defaultEnv.type === IEnvironmentType.CondaRoot
+          // &&
+          // !appData.condaPath
         ) {
           this.setCondaPath(
             condaExePathForEnvPath(getEnvironmentPath(defaultEnv))
@@ -111,102 +118,112 @@ export class Registry implements IRegistry, IDisposable {
       //
     }
     
-    // try to set default env from discovered pythonPath
-    if (!this._defaultEnv && appData.pythonPath) {
-      try {
-        const defaultEnv = this._resolveEnvironmentSync(appData.pythonPath);
+    this.setSystemPythonPath(pythonPath);
 
-        if (defaultEnv) {
-          this._defaultEnv = defaultEnv;
-          // if default env is conda root, then set its conda executable as conda path
-          if (
-            defaultEnv.type === IEnvironmentType.CondaRoot &&
-            !appData.condaPath
-          ) {
-            this.setCondaPath(
-              condaExePathForEnvPath(getEnvironmentPath(defaultEnv))
-            );
-          }
-        }
-      } catch (error) {
-        //
-      }
-    }
+    // try to set default env from discovered pythonPath
+    // if (!this._defaultEnv && appData.pythonPath) {
+    //   try {
+    //     const defaultEnv = this._resolveEnvironmentSync(appData.pythonPath);
+
+    //     if (defaultEnv) {
+    //       this._defaultEnv = defaultEnv;
+    //       // if default env is conda root, then set its conda executable as conda path
+    //       if (
+    //         defaultEnv.type === IEnvironmentType.CondaRoot &&
+    //         !appData.condaPath
+    //       ) {
+    //         this.setCondaPath(
+    //           condaExePathForEnvPath(getEnvironmentPath(defaultEnv))
+    //         );
+    //       }
+    //     }
+    //   } catch (error) {
+    //     //
+    //   }
+    // }
 
     // try to set default env from condaPath
-    if (!this._defaultEnv && appData.condaPath) {
-      if (
-        this.validateCondaBaseEnvironmentAtPath(
-          condaEnvPathForCondaExePath(appData.condaPath)
-        )
-      ) {
-        // set default env from appData.condPath
-        if (!this._defaultEnv) {
-          const condaEnvPath = condaEnvPathForCondaExePath(appData.condaPath);
-          const pythonPath = pythonPathForEnvPath(condaEnvPath, true);
-          try {
-            const defaultEnv = this._resolveEnvironmentSync(pythonPath);
-            if (defaultEnv) {
-              this._defaultEnv = defaultEnv;
-              if (!appData.pythonPath) {
-                appData.pythonPath = pythonPath;
-              }
-            }
-          } catch (error) {
-            //
-          }
-        }
-      }
-    }
+    // if (!this._defaultEnv && appData.condaPath) {
+    //   if (
+    //     this.validateCondaBaseEnvironmentAtPath(
+    //       condaEnvPathForCondaExePath(appData.condaPath)
+    //     )
+    //   ) {
+    //     // set default env from appData.condPath
+    //     if (!this._defaultEnv) {
+    //       const condaEnvPath = condaEnvPathForCondaExePath(appData.condaPath);
+    //       const pythonPath = pythonPathForEnvPath(condaEnvPath, true);
+    //       try {
+    //         const defaultEnv = this._resolveEnvironmentSync(pythonPath);
+    //         if (defaultEnv) {
+    //           this._defaultEnv = defaultEnv;
+    //           if (!appData.pythonPath) {
+    //             appData.pythonPath = pythonPath;
+    //           }
+    //         }
+    //       } catch (error) {
+    //         //
+    //       }
+    //     }
+    //   }
+    // }
 
     // try to set systemPythonPath from default env
-    if (
-      !appData.systemPythonPath &&
-      this._defaultEnv &&
-      fs.existsSync(this._defaultEnv.path)
-    ) {
-      this.setSystemPythonPath(this._defaultEnv.path);
-    }
+    //
+    // if (
+    //   !appData.systemPythonPath &&
+    //   this._defaultEnv &&
+    //   fs.existsSync(this._defaultEnv.path)
+    // ) {
+    //   this.setSystemPythonPath(this._defaultEnv.path);
+    // }
+    // this.setSystemPythonPath(pythonPath); // we set it at the beginning
 
     // discover environments on system
-    const pathEnvironments = this._loadPathEnvironments();
-    const condaEnvironments = this._loadCondaEnvironments();
-    const allEnvironments = [pathEnvironments, condaEnvironments];
-    if (process.platform === 'win32') {
-      let windowRegEnvironments = this._loadWindowsRegistryEnvironments();
-      allEnvironments.push(windowRegEnvironments);
-    }
-    console.log({allEnvironments});
-    this._registryBuilt = Promise.all<IPythonEnvironment[]>(allEnvironments)
-      .then(async environments => {
-        let discoveredEnvs = [].concat(...environments);
+    //const pathEnvironments = this._loadPathEnvironments();
+    //const condaEnvironments = this._loadCondaEnvironments();
 
-        this._userSetEnvironments = await this._resolveEnvironments(
-          this._getUserSetPythonEnvs(),
-          true
-        );
+    //const allEnvironments = [pathEnvironments, condaEnvironments];
+    //if (process.platform === 'win32') {
+    //  let windowRegEnvironments = this._loadWindowsRegistryEnvironments();
+    //  allEnvironments.push(windowRegEnvironments);
+    //}
+
+    // this._registryBuilt = Promise.all<IPythonEnvironment[]>(allEnvironments)
+    //  .then(async environments => {
+
+    this._registryBuilt = Promise.all<IPythonEnvironment[]>([])
+      .then(async environments => {
+
+        // let discoveredEnvs = [].concat(...environments);
+
+        // this._userSetEnvironments = await this._resolveEnvironments(
+        //   this._getUserSetPythonEnvs(),
+        //   true
+        // );
 
         // filter out user set environments
-        discoveredEnvs = discoveredEnvs.filter(env => {
-          return !this._userSetEnvironments.find(
-            userSetEnv => userSetEnv.path === env.path
-          );
-        });
+        // discoveredEnvs = discoveredEnvs.filter(env => {
+        //   return !this._userSetEnvironments.find(
+        //     userSetEnv => userSetEnv.path === env.path
+        //   );
+        // });
 
-        discoveredEnvs = await this._resolveEnvironments(discoveredEnvs, true);
-        this._discoveredEnvironments = discoveredEnvs;
+        //discoveredEnvs = await this._resolveEnvironments(discoveredEnvs, true);
+        //this._discoveredEnvironments = discoveredEnvs;
 
-        this._updateEnvironments();
+        // this._updateEnvironments(); // update in appData
         console.log('_registryBuilt');
-        console.log(this._environments);
-        if (!this._defaultEnv && this._environments.length > 0) {
-          this._defaultEnv = this._environments[0];
-          if (!appData.pythonPath) {
-            appData.pythonPath = this._defaultEnv.path;
-          }
-        }
+        // console.log(this._environments);
 
-        await updateDiscoveredPythonPaths();
+        // if (!this._defaultEnv && this._environments.length > 0) {
+        //   this._defaultEnv = this._environments[0];
+        //   if (!appData.pythonPath) {
+        //     appData.pythonPath = this._defaultEnv.path;
+        //   }
+        // }
+
+        // await updateDiscoveredPythonPaths();
       })
       .catch(reason => {
         if (reason.fileName || reason.lineNumber) {
@@ -242,76 +259,76 @@ export class Registry implements IRegistry, IDisposable {
 
   // rediscover Python envs directory for user installed environments,
   // in case they are not in cache already
-  private _getUserSetPythonEnvs(): IPythonEnvironment[] {
-    const envsDir = getPythonEnvsDirectory();
-    const envsDirExists =
-      envsDir && fs.existsSync(envsDir) && fs.statSync(envsDir).isDirectory();
-    let userInstalledEnvs: IPythonEnvironment[] = [];
+  // private _getUserSetPythonEnvs(): IPythonEnvironment[] {
+  //   const envsDir = getPythonEnvsDirectory();
+  //   const envsDirExists =
+  //     envsDir && fs.existsSync(envsDir) && fs.statSync(envsDir).isDirectory();
+  //   let userInstalledEnvs: IPythonEnvironment[] = [];
 
-    if (envsDirExists) {
-      try {
-        const list = fs.readdirSync(envsDir);
-        list.forEach(filePath => {
-          const envPath = envsDir + '/' + filePath;
-          const stat = fs.lstatSync(envPath);
-          if (stat && stat.isDirectory()) {
-            const pythonPath = pythonPathForEnvPath(envPath);
-            if (fs.existsSync(pythonPath)) {
-              const found = appData.userSetPythonEnvs.find(env => {
-                return env.path === pythonPath;
-              });
+  //   if (envsDirExists) {
+  //     try {
+  //       const list = fs.readdirSync(envsDir);
+  //       list.forEach(filePath => {
+  //         const envPath = envsDir + '/' + filePath;
+  //         const stat = fs.lstatSync(envPath);
+  //         if (stat && stat.isDirectory()) {
+  //           const pythonPath = pythonPathForEnvPath(envPath);
+  //           if (fs.existsSync(pythonPath)) {
+  //             const found = appData.userSetPythonEnvs.find(env => {
+  //               return env.path === pythonPath;
+  //             });
 
-              if (!found) {
-                userInstalledEnvs.push({
-                  path: pythonPath,
-                  name: '',
-                  type: IEnvironmentType.Path,
-                  versions: {},
-                  defaultKernel: 'python3'
-                });
-              }
-            }
-          }
-        });
-      } catch (error) {
-        log.error(`Failed to re-discover /envs directory (${envsDir})`, error);
-      }
-    }
+  //             if (!found) {
+  //               userInstalledEnvs.push({
+  //                 path: pythonPath,
+  //                 name: '',
+  //                 type: IEnvironmentType.Path,
+  //                 versions: {},
+  //                 defaultKernel: 'python3'
+  //               });
+  //             }
+  //           }
+  //         }
+  //       });
+  //     } catch (error) {
+  //       log.error(`Failed to re-discover /envs directory (${envsDir})`, error);
+  //     }
+  //   }
 
-    return [...appData.userSetPythonEnvs, ...userInstalledEnvs];
-  }
+  //   return [...appData.userSetPythonEnvs, ...userInstalledEnvs];
+  // }
 
-  private async _resolveEnvironments(
-    envs: IPythonEnvironment[],
-    sort?: boolean
-  ): Promise<IPythonEnvironment[]> {
-    let filteredEnvs = envs.filter(env => this._pathExistsSync(env.path));
-    const uniqueEnvs = this._getUniqueObjects(filteredEnvs);
-    const resolvedEnvs = await Promise.all(
-      uniqueEnvs.map(async env => await this._resolveEnvironment(env.path))
-    );
-    filteredEnvs = resolvedEnvs.filter(env => env !== undefined);
+  // private async _resolveEnvironments(
+  //   envs: IPythonEnvironment[],
+  //   sort?: boolean
+  // ): Promise<IPythonEnvironment[]> {
+  //   let filteredEnvs = envs.filter(env => this._pathExistsSync(env.path));
+  //   const uniqueEnvs = this._getUniqueObjects(filteredEnvs);
+  //   const resolvedEnvs = await Promise.all(
+  //     uniqueEnvs.map(async env => await this._resolveEnvironment(env.path))
+  //   );
+  //   filteredEnvs = resolvedEnvs.filter(env => env !== undefined);
 
-    if (sort) {
-      this._sortEnvironments(filteredEnvs, JUPYTER_ENV_REQUIREMENTS);
-    }
+  //   if (sort) {
+  //     this._sortEnvironments(filteredEnvs, JUPYTER_ENV_REQUIREMENTS);
+  //   }
 
-    return filteredEnvs;
-  }
+  //   return filteredEnvs;
+  // }
 
-  private async _resolveEnvironment(
-    pythonPath: string
-  ): Promise<IPythonEnvironment> {
-    if (!(await this._pathExists(pythonPath))) {
-      return;
-    }
+  // private async _resolveEnvironment(
+  //   pythonPath: string
+  // ): Promise<IPythonEnvironment> {
+  //   if (!(await this._pathExists(pythonPath))) {
+  //     return;
+  //   }
 
-    const env = await this.getEnvironmentInfo(pythonPath);
+  //   const env = await this.getEnvironmentInfo(pythonPath);
 
-    if (env && environmentSatisfiesRequirements(env)) {
-      return env;
-    }
-  }
+  //   if (env && environmentSatisfiesRequirements(env)) {
+  //     return env;
+  //   }
+  // }
 
   /**
    * Resolve Python environment at pythonPath
@@ -370,7 +387,7 @@ export class Registry implements IRegistry, IDisposable {
   getDefaultEnvironment(): Promise<IPythonEnvironment> {
     console.log('getDefaultEnvironment');
     console.log(this._defaultEnv);
-    
+
     if (this._defaultEnv) {
       return Promise.resolve(this._defaultEnv);
     } else {
@@ -693,301 +710,301 @@ export class Registry implements IRegistry, IDisposable {
     );
   }
 
-  private async _loadPathEnvironments(): Promise<IPythonEnvironment[]> {
-    const pythonExecutableName =
-      process.platform === 'win32' ? 'python.exe' : 'python';
+  // private async _loadPathEnvironments(): Promise<IPythonEnvironment[]> {
+  //   const pythonExecutableName =
+  //     process.platform === 'win32' ? 'python.exe' : 'python';
 
-    const pythonInstances = [
-      this._getExecutableInstances(pythonExecutableName, process.env.PATH)
-    ];
+  //   const pythonInstances = [
+  //     this._getExecutableInstances(pythonExecutableName, process.env.PATH)
+  //   ];
 
-    if (process.platform === 'darwin') {
-      pythonInstances.unshift(
-        this._getExecutableInstances('python3', process.env.PATH)
-      );
-    }
+  //   if (process.platform === 'darwin') {
+  //     pythonInstances.unshift(
+  //       this._getExecutableInstances('python3', process.env.PATH)
+  //     );
+  //   }
 
-    const flattenedPythonPaths: Promise<string[]> = Promise.all(
-      pythonInstances
-    ).then<string[]>(multiplePythons => {
-      return Array.prototype.concat.apply([], multiplePythons);
-    });
+  //   const flattenedPythonPaths: Promise<string[]> = Promise.all(
+  //     pythonInstances
+  //   ).then<string[]>(multiplePythons => {
+  //     return Array.prototype.concat.apply([], multiplePythons);
+  //   });
 
-    const pythonPaths = await flattenedPythonPaths;
+  //   const pythonPaths = await flattenedPythonPaths;
 
-    if (!appData.systemPythonPath && pythonPaths.length > 0) {
-      this.setSystemPythonPath(pythonPaths[0]);
-    }
+  //   if (!appData.systemPythonPath && pythonPaths.length > 0) {
+  //     this.setSystemPythonPath(pythonPaths[0]);
+  //   }
 
-    return pythonPaths.map((pythonPath, index) => {
-      let newPythonEnvironment: IPythonEnvironment = {
-        name: `${basename(pythonPath)}-${index}`,
-        path: pythonPath,
-        type: IEnvironmentType.Path,
-        versions: {},
-        defaultKernel: 'python3'
-      };
+  //   return pythonPaths.map((pythonPath, index) => {
+  //     let newPythonEnvironment: IPythonEnvironment = {
+  //       name: `${basename(pythonPath)}-${index}`,
+  //       path: pythonPath,
+  //       type: IEnvironmentType.Path,
+  //       versions: {},
+  //       defaultKernel: 'python3'
+  //     };
 
-      return newPythonEnvironment;
-    });
-  }
+  //     return newPythonEnvironment;
+  //   });
+  // }
 
-  private async _loadCondaEnvironments(): Promise<IPythonEnvironment[]> {
-    const pathCondas = this._getPathCondas();
-    const commonCondas = Promise.resolve(
-      Registry.COMMON_CONDA_LOCATIONS.filter(condaEnvPath =>
-        this._pathExistsSync(condaEnvPath)
-      )
-    );
+  // private async _loadCondaEnvironments(): Promise<IPythonEnvironment[]> {
+  //   const pathCondas = this._getPathCondas();
+  //   const commonCondas = Promise.resolve(
+  //     Registry.COMMON_CONDA_LOCATIONS.filter(condaEnvPath =>
+  //       this._pathExistsSync(condaEnvPath)
+  //     )
+  //   );
 
-    const allCondas = [pathCondas, commonCondas];
+  //   const allCondas = [pathCondas, commonCondas];
 
-    // add bundled conda env to the list of base conda envs
-    const bundledEnvPath = getBundledPythonEnvPath();
-    if (fs.existsSync(path.join(bundledEnvPath, 'condabin'))) {
-      allCondas.unshift(Promise.resolve([bundledEnvPath]));
-    }
+  //   // add bundled conda env to the list of base conda envs
+  //   const bundledEnvPath = getBundledPythonEnvPath();
+  //   if (fs.existsSync(path.join(bundledEnvPath, 'condabin'))) {
+  //     allCondas.unshift(Promise.resolve([bundledEnvPath]));
+  //   }
 
-    if (process.platform === 'win32') {
-      allCondas.push(this._getWindowsRegistryCondas());
-    }
+  //   if (process.platform === 'win32') {
+  //     allCondas.push(this._getWindowsRegistryCondas());
+  //   }
 
-    const rootEnvs = await this._loadRootCondaEnvironments(allCondas);
-    const subEnvs = rootEnvs.reduce<Promise<IPythonEnvironment[]>[]>(
-      (accum, currentRootEnv, index, self) => {
-        let rootSubEnvsFolderPath: string;
-        if (process.platform === 'win32') {
-          rootSubEnvsFolderPath = normalize(join(currentRootEnv.path, '..'));
-        } else {
-          rootSubEnvsFolderPath = normalize(
-            join(currentRootEnv.path, '..', '..')
-          );
-        }
+  //   const rootEnvs = await this._loadRootCondaEnvironments(allCondas);
+  //   const subEnvs = rootEnvs.reduce<Promise<IPythonEnvironment[]>[]>(
+  //     (accum, currentRootEnv, index, self) => {
+  //       let rootSubEnvsFolderPath: string;
+  //       if (process.platform === 'win32') {
+  //         rootSubEnvsFolderPath = normalize(join(currentRootEnv.path, '..'));
+  //       } else {
+  //         rootSubEnvsFolderPath = normalize(
+  //           join(currentRootEnv.path, '..', '..')
+  //         );
+  //       }
 
-        accum.push(this._getSubEnvironmentsFromRoot(rootSubEnvsFolderPath));
+  //       accum.push(this._getSubEnvironmentsFromRoot(rootSubEnvsFolderPath));
 
-        return accum;
-      },
-      []
-    );
-    const subEnvsResolved = await Promise.all(subEnvs);
-    let flattenSubEnvs = Array.prototype.concat.apply(
-      [],
-      subEnvsResolved
-    ) as IPythonEnvironment[];
-    return rootEnvs.concat(flattenSubEnvs);
-  }
+  //       return accum;
+  //     },
+  //     []
+  //   );
+  //   const subEnvsResolved = await Promise.all(subEnvs);
+  //   let flattenSubEnvs = Array.prototype.concat.apply(
+  //     [],
+  //     subEnvsResolved
+  //   ) as IPythonEnvironment[];
+  //   return rootEnvs.concat(flattenSubEnvs);
+  // }
 
-  private _getSubEnvironmentsFromRoot(
-    rootPath: string
-  ): Promise<IPythonEnvironment[]> {
-    let subEnvironmentsFolder = join(rootPath, 'envs');
-    let rootName = basename(rootPath);
+  // private _getSubEnvironmentsFromRoot(
+  //   rootPath: string
+  // ): Promise<IPythonEnvironment[]> {
+  //   let subEnvironmentsFolder = join(rootPath, 'envs');
+  //   let rootName = basename(rootPath);
 
-    return new Promise((resolve, reject) => {
-      if (!fs.existsSync(subEnvironmentsFolder)) {
-        return resolve([]);
-      }
-      fs.readdir(subEnvironmentsFolder, (err, files) => {
-        if (err) {
-          reject(err);
-        } else {
-          let subEnvsWithPython = files
-            .map(subEnvPath => {
-              return pythonPathForEnvPath(
-                path.join(subEnvironmentsFolder, subEnvPath),
-                true
-              );
-            })
-            .filter(pythonPath => this._pathExists(pythonPath));
+  //   return new Promise((resolve, reject) => {
+  //     if (!fs.existsSync(subEnvironmentsFolder)) {
+  //       return resolve([]);
+  //     }
+  //     fs.readdir(subEnvironmentsFolder, (err, files) => {
+  //       if (err) {
+  //         reject(err);
+  //       } else {
+  //         let subEnvsWithPython = files
+  //           .map(subEnvPath => {
+  //             return pythonPathForEnvPath(
+  //               path.join(subEnvironmentsFolder, subEnvPath),
+  //               true
+  //             );
+  //           })
+  //           .filter(pythonPath => this._pathExists(pythonPath));
 
-          resolve(
-            subEnvsWithPython.map(subEnvPath => {
-              return {
-                name: `${rootName}-${basename(
-                  normalize(join(subEnvPath, '..', '..'))
-                )}`,
-                path: subEnvPath,
-                type: IEnvironmentType.CondaEnv,
-                versions: {}
-              } as IPythonEnvironment;
-            })
-          );
-        }
-      });
-    });
-  }
+  //         resolve(
+  //           subEnvsWithPython.map(subEnvPath => {
+  //             return {
+  //               name: `${rootName}-${basename(
+  //                 normalize(join(subEnvPath, '..', '..'))
+  //               )}`,
+  //               path: subEnvPath,
+  //               type: IEnvironmentType.CondaEnv,
+  //               versions: {}
+  //             } as IPythonEnvironment;
+  //           })
+  //         );
+  //       }
+  //     });
+  //   });
+  // }
 
-  private async _loadRootCondaEnvironments(
-    condaRoots: Promise<string[]>[]
-  ): Promise<IPythonEnvironment[]> {
-    const allCondas = await Promise.all(condaRoots);
-    const flattenedCondaRoots: string[] = Array.prototype.concat.apply(
-      [],
-      allCondas
-    );
-    const uniqueCondaRoots = this._getUniqueObjects(flattenedCondaRoots);
+  // private async _loadRootCondaEnvironments(
+  //   condaRoots: Promise<string[]>[]
+  // ): Promise<IPythonEnvironment[]> {
+  //   const allCondas = await Promise.all(condaRoots);
+  //   const flattenedCondaRoots: string[] = Array.prototype.concat.apply(
+  //     [],
+  //     allCondas
+  //   );
+  //   const uniqueCondaRoots = this._getUniqueObjects(flattenedCondaRoots);
 
-    return uniqueCondaRoots.map(condaRootEnvPath => {
-      const path = pythonPathForEnvPath(condaRootEnvPath, true);
+  //   return uniqueCondaRoots.map(condaRootEnvPath => {
+  //     const path = pythonPathForEnvPath(condaRootEnvPath, true);
 
-      const newRootEnvironment: IPythonEnvironment = {
-        name: basename(condaRootEnvPath),
-        path: path,
-        type: IEnvironmentType.CondaRoot,
-        versions: {},
-        defaultKernel: 'python3'
-      };
+  //     const newRootEnvironment: IPythonEnvironment = {
+  //       name: basename(condaRootEnvPath),
+  //       path: path,
+  //       type: IEnvironmentType.CondaRoot,
+  //       versions: {},
+  //       defaultKernel: 'python3'
+  //     };
 
-      if (!appData.condaPath) {
-        this.setCondaPath(condaExePathForEnvPath(condaRootEnvPath));
-      }
+  //     if (!appData.condaPath) {
+  //       this.setCondaPath(condaExePathForEnvPath(condaRootEnvPath));
+  //     }
 
-      return newRootEnvironment;
-    });
-  }
+  //     return newRootEnvironment;
+  //   });
+  // }
 
-  private async _getPathCondas(): Promise<string[]> {
-    const PATH = process.env.PATH;
-    const condasInPath = await this._getExecutableInstances('conda', PATH);
+  // private async _getPathCondas(): Promise<string[]> {
+  //   const PATH = process.env.PATH;
+  //   const condasInPath = await this._getExecutableInstances('conda', PATH);
 
-    return await Promise.all(
-      condasInPath.map(async condaExecutablePath => {
-        const condaInfoOutput = runCommand(condaExecutablePath, [
-          'info',
-          '--json'
-        ]);
-        const condaInfoJSON = await this._convertExecutableOutputFromJson(
-          condaInfoOutput
-        );
-        return condaInfoJSON.root_prefix as string;
-      })
-    );
-  }
+  //   return await Promise.all(
+  //     condasInPath.map(async condaExecutablePath => {
+  //       const condaInfoOutput = runCommand(condaExecutablePath, [
+  //         'info',
+  //         '--json'
+  //       ]);
+  //       const condaInfoJSON = await this._convertExecutableOutputFromJson(
+  //         condaInfoOutput
+  //       );
+  //       return condaInfoJSON.root_prefix as string;
+  //     })
+  //   );
+  // }
 
-  private _getWindowsRegistryCondas(): Promise<string[]> {
-    let valuePredicate = (value: any) => {
-      return value.name === '(Default)';
-    };
+  // private _getWindowsRegistryCondas(): Promise<string[]> {
+  //   let valuePredicate = (value: any) => {
+  //     return value.name === '(Default)';
+  //   };
 
-    return this._getAllMatchingValuesFromSubRegistry(
-      WinRegistry.HKCU,
-      '\\SOFTWARE\\Python\\ContinuumAnalytics',
-      'InstallPath',
-      valuePredicate
-    );
-  }
+  //   return this._getAllMatchingValuesFromSubRegistry(
+  //     WinRegistry.HKCU,
+  //     '\\SOFTWARE\\Python\\ContinuumAnalytics',
+  //     'InstallPath',
+  //     valuePredicate
+  //   );
+  // }
 
-  private async _loadWindowsRegistryEnvironments(): Promise<
-    IPythonEnvironment[]
-  > {
-    const valuePredicate = (value: any) => {
-      return value.name === '(Default)';
-    };
+  // private async _loadWindowsRegistryEnvironments(): Promise<
+  //   IPythonEnvironment[]
+  // > {
+  //   const valuePredicate = (value: any) => {
+  //     return value.name === '(Default)';
+  //   };
 
-    const defaultPaths = this._getAllMatchingValuesFromSubRegistry(
-      WinRegistry.HKCU,
-      '\\SOFTWARE\\Python\\PythonCore',
-      'InstallPath',
-      valuePredicate
-    );
+  //   const defaultPaths = this._getAllMatchingValuesFromSubRegistry(
+  //     WinRegistry.HKCU,
+  //     '\\SOFTWARE\\Python\\PythonCore',
+  //     'InstallPath',
+  //     valuePredicate
+  //   );
 
-    const installPaths = await defaultPaths;
+  //   const installPaths = await defaultPaths;
 
-    return await Promise.all(
-      installPaths.map(path => {
-        const finalPath = join(path, 'python.exe');
+  //   return await Promise.all(
+  //     installPaths.map(path => {
+  //       const finalPath = join(path, 'python.exe');
 
-        return {
-          name: `WinReg-${basename(normalize(join(path, '..')))}`,
-          path: finalPath,
-          type: IEnvironmentType.WindowsReg,
-          versions: {}
-        } as IPythonEnvironment;
-      })
-    );
-  }
+  //       return {
+  //         name: `WinReg-${basename(normalize(join(path, '..')))}`,
+  //         path: finalPath,
+  //         type: IEnvironmentType.WindowsReg,
+  //         versions: {}
+  //       } as IPythonEnvironment;
+  //     })
+  //   );
+  // }
 
   // This function will retrieve all subdirectories of the main registry path, and for each subdirectory(registry) it will search for the key
   // matching the subDirectory parameter and the value the passes
-  private async _getAllMatchingValuesFromSubRegistry(
-    registryHive: string,
-    mainRegPath: string,
-    subDirectory: string,
-    valueFilter: (value: any) => boolean
-  ): Promise<string[]> {
-    const mainWinRegistry = new WinRegistry({
-      hive: registryHive,
-      key: mainRegPath
-    });
+  // private async _getAllMatchingValuesFromSubRegistry(
+  //   registryHive: string,
+  //   mainRegPath: string,
+  //   subDirectory: string,
+  //   valueFilter: (value: any) => boolean
+  // ): Promise<string[]> {
+  //   const mainWinRegistry = new WinRegistry({
+  //     hive: registryHive,
+  //     key: mainRegPath
+  //   });
 
-    const getMainRegistryKeys: Promise<any[]> = new Promise(
-      (resolve, reject) => {
-        mainWinRegistry.keys((err: any, items: any[]) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(items);
-          }
-        });
-      }
-    );
+  //   const getMainRegistryKeys: Promise<any[]> = new Promise(
+  //     (resolve, reject) => {
+  //       mainWinRegistry.keys((err: any, items: any[]) => {
+  //         if (err) {
+  //           reject(err);
+  //         } else {
+  //           resolve(items);
+  //         }
+  //       });
+  //     }
+  //   );
 
-    const installPathValues: Promise<any[]> = getMainRegistryKeys
-      .then(items => {
-        return Promise.all(
-          items.map(item => {
-            let installPath = new WinRegistry({
-              hive: registryHive,
-              key: item.key + '\\' + subDirectory
-            });
+  //   const installPathValues: Promise<any[]> = getMainRegistryKeys
+  //     .then(items => {
+  //       return Promise.all(
+  //         items.map(item => {
+  //           let installPath = new WinRegistry({
+  //             hive: registryHive,
+  //             key: item.key + '\\' + subDirectory
+  //           });
 
-            let allValues: Promise<any[]> = new Promise((resolve, reject) => {
-              installPath.values((err: any, values: any[]) => {
-                if (err) {
-                  reject(err);
-                } else {
-                  resolve(values);
-                }
-              });
-            });
+  //           let allValues: Promise<any[]> = new Promise((resolve, reject) => {
+  //             installPath.values((err: any, values: any[]) => {
+  //               if (err) {
+  //                 reject(err);
+  //               } else {
+  //                 resolve(values);
+  //               }
+  //             });
+  //           });
 
-            return allValues;
-          })
-        );
-      })
-      .then(nestedInstallPathValues => {
-        return Array.prototype.concat.apply([], nestedInstallPathValues);
-      });
+  //           return allValues;
+  //         })
+  //       );
+  //     })
+  //     .then(nestedInstallPathValues => {
+  //       return Array.prototype.concat.apply([], nestedInstallPathValues);
+  //     });
 
-    const pathValues = await installPathValues;
-    return pathValues.filter(valueFilter).map(v => v.value);
-  }
+  //   const pathValues = await installPathValues;
+  //   return pathValues.filter(valueFilter).map(v => v.value);
+  // }
 
-  private _convertExecutableOutputFromJson(
-    output: Promise<string>
-  ): Promise<any> {
-    return new Promise((resolve, reject) => {
-      output
-        .then(output => {
-          try {
-            resolve(JSON.parse(output));
-          } catch (e) {
-            log.error(output);
-            reject(e);
-          }
-        })
-        .catch(reject);
-    });
-  }
+  // private _convertExecutableOutputFromJson(
+  //   output: Promise<string>
+  // ): Promise<any> {
+  //   return new Promise((resolve, reject) => {
+  //     output
+  //       .then(output => {
+  //         try {
+  //           resolve(JSON.parse(output));
+  //         } catch (e) {
+  //           log.error(output);
+  //           reject(e);
+  //         }
+  //       })
+  //       .catch(reject);
+  //   });
+  // }
 
-  private _pathExists(path: string): Promise<boolean> {
-    return new Promise<boolean>((res, rej) => {
-      fs.access(path, fs.constants.F_OK, e => {
-        res(e === undefined || e === null);
-      });
-    });
-  }
+  // private _pathExists(path: string): Promise<boolean> {
+  //   return new Promise<boolean>((res, rej) => {
+  //     fs.access(path, fs.constants.F_OK, e => {
+  //       res(e === undefined || e === null);
+  //     });
+  //   });
+  // }
 
   private _pathExistsSync(path: string): boolean {
     try {
@@ -998,32 +1015,32 @@ export class Registry implements IRegistry, IDisposable {
     }
   }
 
-  private _getExecutableInstances(
-    executableName: string,
-    path: string
-  ): Promise<string[]> {
-    return new Promise<string[]>((resolve, reject) => {
-      which(
-        executableName,
-        { all: true, path: path },
-        (err: any, result: string | string[]) => {
-          if (err) {
-            if (err.code === 'ENOENT') {
-              resolve([]);
-            } else {
-              reject(err);
-            }
-          } else {
-            if (typeof result === 'string') {
-              resolve([result]);
-            } else {
-              resolve(result);
-            }
-          }
-        }
-      );
-    });
-  }
+  // private _getExecutableInstances(
+  //   executableName: string,
+  //   path: string
+  // ): Promise<string[]> {
+  //   return new Promise<string[]>((resolve, reject) => {
+  //     which(
+  //       executableName,
+  //       { all: true, path: path },
+  //       (err: any, result: string | string[]) => {
+  //         if (err) {
+  //           if (err.code === 'ENOENT') {
+  //             resolve([]);
+  //           } else {
+  //             reject(err);
+  //           }
+  //         } else {
+  //           if (typeof result === 'string') {
+  //             resolve([result]);
+  //           } else {
+  //             resolve(result);
+  //           }
+  //         }
+  //       }
+  //     );
+  //   });
+  // }
 
   private _runPythonModuleCommand(
     pythonPath: string,
@@ -1053,93 +1070,93 @@ export class Registry implements IRegistry, IDisposable {
     });
   }
 
-  private _sortEnvironments(
-    environments: IPythonEnvironment[],
-    requirements: IJupyterEnvRequirement[]
-  ) {
-    environments.sort((a, b) => {
-      let typeCompareResult = this._compareEnvType(a.type, b.type);
-      if (typeCompareResult !== 0) {
-        return typeCompareResult;
-      } else {
-        let versionCompareResult = this._compareVersions(
-          a.versions,
-          b.versions,
-          requirements
-        );
-        if (versionCompareResult !== 0) {
-          return versionCompareResult;
-        } else {
-          return a.name.localeCompare(b.name);
-        }
-      }
-    });
-  }
+  // private _sortEnvironments(
+  //   environments: IPythonEnvironment[],
+  //   requirements: IJupyterEnvRequirement[]
+  // ) {
+  //   environments.sort((a, b) => {
+  //     let typeCompareResult = this._compareEnvType(a.type, b.type);
+  //     if (typeCompareResult !== 0) {
+  //       return typeCompareResult;
+  //     } else {
+  //       let versionCompareResult = this._compareVersions(
+  //         a.versions,
+  //         b.versions,
+  //         requirements
+  //       );
+  //       if (versionCompareResult !== 0) {
+  //         return versionCompareResult;
+  //       } else {
+  //         return a.name.localeCompare(b.name);
+  //       }
+  //     }
+  //   });
+  // }
 
-  private _compareVersions(
-    a: IVersionContainer,
-    b: IVersionContainer,
-    requirements: IJupyterEnvRequirement[]
-  ): number {
-    let versionPairs = requirements.map(req => {
-      return [a[req.name], b[req.name]];
-    });
+  // private _compareVersions(
+  //   a: IVersionContainer,
+  //   b: IVersionContainer,
+  //   requirements: IJupyterEnvRequirement[]
+  // ): number {
+  //   let versionPairs = requirements.map(req => {
+  //     return [a[req.name], b[req.name]];
+  //   });
 
-    for (let index = 0; index < requirements.length; index++) {
-      let [aVersion, bVersion] = versionPairs[index];
-      let result = bVersion.localeCompare(aVersion);
+  //   for (let index = 0; index < requirements.length; index++) {
+  //     let [aVersion, bVersion] = versionPairs[index];
+  //     let result = bVersion.localeCompare(aVersion);
 
-      if (result !== 0) {
-        return result;
-      }
-    }
+  //     if (result !== 0) {
+  //       return result;
+  //     }
+  //   }
 
-    return 0;
-  }
+  //   return 0;
+  // }
 
-  private _compareEnvType(a: IEnvironmentType, b: IEnvironmentType): number {
-    return this._getEnvTypeValue(a) - this._getEnvTypeValue(b);
-  }
+  // private _compareEnvType(a: IEnvironmentType, b: IEnvironmentType): number {
+  //   return this._getEnvTypeValue(a) - this._getEnvTypeValue(b);
+  // }
 
-  private _getEnvTypeValue(a: IEnvironmentType): number {
-    switch (a) {
-      case IEnvironmentType.Path:
-        return 0;
-      case IEnvironmentType.CondaRoot:
-        return 1;
-      case IEnvironmentType.WindowsReg:
-        return 2;
-      case IEnvironmentType.CondaEnv:
-        return 3;
-      default:
-        return 100;
-    }
-  }
+  // private _getEnvTypeValue(a: IEnvironmentType): number {
+  //   switch (a) {
+  //     case IEnvironmentType.Path:
+  //       return 0;
+  //     case IEnvironmentType.CondaRoot:
+  //       return 1;
+  //     case IEnvironmentType.WindowsReg:
+  //       return 2;
+  //     case IEnvironmentType.CondaEnv:
+  //       return 3;
+  //     default:
+  //       return 100;
+  //   }
+  // }
 
-  // Probably pretty slow, luckily won't ever be used on many values
-  private _getUniqueObjects<T, V>(arr: T[], keyFunction?: (value: T) => V) {
-    if (keyFunction) {
-      let mappedIndices = arr.map(keyFunction).map((keyValue, index, self) => {
-        return self.indexOf(keyValue);
-      });
+  // // Probably pretty slow, luckily won't ever be used on many values
+  // private _getUniqueObjects<T, V>(arr: T[], keyFunction?: (value: T) => V) {
+  //   if (keyFunction) {
+  //     let mappedIndices = arr.map(keyFunction).map((keyValue, index, self) => {
+  //       return self.indexOf(keyValue);
+  //     });
 
-      let filteredIndices = mappedIndices.filter(
-        (mappedIndex, actualIndex, self) => {
-          return mappedIndex === actualIndex;
-        }
-      );
+  //     let filteredIndices = mappedIndices.filter(
+  //       (mappedIndex, actualIndex, self) => {
+  //         return mappedIndex === actualIndex;
+  //       }
+  //     );
 
-      let filteredValues = filteredIndices.map(index => {
-        return arr[index];
-      });
+  //     let filteredValues = filteredIndices.map(index => {
+  //       return arr[index];
+  //     });
 
-      return filteredValues;
-    } else {
-      return arr.filter((value, index, self) => {
-        return self.indexOf(value) === index;
-      });
-    }
-  }
+  //     return filteredValues;
+  //   } else {
+  //     return arr.filter((value, index, self) => {
+  //       return self.indexOf(value) === index;
+  //     });
+  //   }
+  // }
 
   get ready(): Promise<void> {
     return this._registryBuilt;

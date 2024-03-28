@@ -353,15 +353,15 @@ export async function installCondaPackEnvironment(
       shell: isWin ? 'cmd.exe' : '/bin/bash'
     });
 
-    installerProc.on('exit', (procExitCode:number) => {
-    const jlabInstallCommand = 'conda install --yes -c conda-forge jupyterlab==4.1.2';
+    // installerProc.on('exit', (procExitCode:number) => {
+    // const jlabInstallCommand = 'conda install --yes -c conda-forge jupyterlab==4.1.2';
 
-    const jlabInstallerProc = exec(jlabInstallCommand, {
-      shell: isWin ? 'cmd.exe' : '/bin/bash'
-    });
+    // const jlabInstallerProc = exec(jlabInstallCommand, {
+    //   shell: isWin ? 'cmd.exe' : '/bin/bash'
+    // });
     
 
-    jlabInstallerProc.on('exit', (exitCode: number) => {
+    installerProc.on('exit', (exitCode: number) => {
       if (exitCode === 0) {
 
         console.log('Install Piece of Code ...');
@@ -404,13 +404,13 @@ export async function installCondaPackEnvironment(
     });
   });
 
-    installerProc.on('error', (err: Error) => {
-      listener?.onInstallStatus(EnvironmentInstallStatus.Failure, err.message);
-      log.error(err);
-      reject();
-      return;
-    });
-  });
+  //   installerProc.on('error', (err: Error) => {
+  //     listener?.onInstallStatus(EnvironmentInstallStatus.Failure, err.message);
+  //     log.error(err);
+  //     reject();
+  //     return;
+  //   });
+  // });
 }
 
 export function markEnvironmentAsJupyterInstalled(
@@ -869,14 +869,13 @@ export async function setupJlabCommandWithUserRights() {
   const cmd2 = `chmod 755 ${symlinkPath}`;
   const cmd3 = `chmod 755 ${targetPath}`;
   const cmd = `${cmd1} && ${cmd2} && ${cmd3}`;
-  sudo.exec(cmd, {name: 'MLJAR Studio'},
+  console.log('Execute', cmd);
+  sudo.exec(cmd, {name: 'MLJAR Studio configuration'},
     function(error, stdout, stderr) {
       if (error) throw error;
       console.log('stdout: ' + stdout);
     }
   );
-
-
   // try {
   //   if (!fs.existsSync(symlinkPath)) {
   //     const cmd = `ln -s ${targetPath} ${symlinkPath}`;
