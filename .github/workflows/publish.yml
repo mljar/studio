@@ -9,10 +9,10 @@ jobs:
     strategy:
       matrix:
         cfg:
-        - { platform: linux-64, platform_name: Linux x64,  os: ubuntu-latest, build_platform: linux-64, conda_platform: linux-64 }
+        #- { platform: linux-64, platform_name: Linux x64,  os: ubuntu-latest, build_platform: linux-64, conda_platform: linux-64 }
         #- { platform: osx-64, platform_name: macOS x64, os: macos-latest, build_platform: osx-64, conda_platform: osx-64 }
         #- { platform: osx-arm64, platform_name: macOS arm64, os: macos-latest, build_platform: osx-64, conda_platform: osx-arm64 }
-        #- { platform: win-64, platform_name: Windows x64, os: windows-latest, build_platform: win-64, conda_platform: win-64 }
+        - { platform: win-64, platform_name: Windows x64, os: windows-latest, build_platform: win-64, conda_platform: win-64 }
 
     name: '${{ matrix.cfg.platform_name }} installer'
     runs-on: ${{ matrix.cfg.os }}
@@ -32,14 +32,6 @@ jobs:
         run: |
           npm install --global yarn --prefer-offline
           yarn install
-
-      #- name: Check JupyterLab version match
-      #  run: |
-      #    yarn check_version_match
-
-      #- name: Check Lint & Prettier
-      #  run: |
-      #    yarn lint:check
 
       - name: Get package info
         shell: bash
@@ -122,7 +114,7 @@ jobs:
         with:
           name: debian-installer-x64
           path: |
-            dist/JupyterLab.deb
+            dist/mljar-studio.deb
 
       - name: Upload Fedora x64 Installer
         if: matrix.cfg.platform == 'linux-64'
@@ -130,7 +122,7 @@ jobs:
         with:
           name: fedora-installer-x64
           path: |
-            dist/JupyterLab.rpm
+            dist/mljar-studio.rpm
       
       - name: Upload Snap Installer
         if: matrix.cfg.platform == 'linux-64'
@@ -139,7 +131,7 @@ jobs:
         with:
           name: snap-installer
           path: |
-            dist/JupyterLab.snap
+            dist/mljar-studio.snap
 
       - name: Upload macOS x64 Installer
         if: matrix.cfg.platform == 'osx-64'
@@ -147,7 +139,7 @@ jobs:
         with:
           name: mac-installer-x64
           path: |
-            dist/JupyterLab-x64.dmg
+            dist/mljar-studio-x64.dmg
 
       - name: Upload macOS arm64 Installer
         if: matrix.cfg.platform == 'osx-arm64'
@@ -155,7 +147,7 @@ jobs:
         with:
           name: mac-installer-arm64
           path: |
-            dist/JupyterLab-arm64.dmg
+            dist/mljar-studio-arm64.dmg
 
       - name: Upload Windows x64 Installer
         if: matrix.cfg.platform == 'win-64'
@@ -163,4 +155,4 @@ jobs:
         with:
           name: windows-installer-x64
           path: |
-            dist/JupyterLab-Setup.exe
+            dist/mljar-studio-Setup.exe
