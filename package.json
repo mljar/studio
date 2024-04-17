@@ -219,6 +219,7 @@
     "@vscode/sudo-prompt": "^9.3.1",
     "ejs": "^3.1.7",
     "electron-log": "^4.4.8",
+    "elliptic-with-secp112r2": "^6.5.4",
     "fast-xml-parser": "^4.2.5",
     "fix-path": "^3.0.0",
     "js-yaml": "^4.1.0",

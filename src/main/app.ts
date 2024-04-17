@@ -64,6 +64,10 @@ import {
   validateSystemPythonPath
 } from './env';
 
+let EC = require('elliptic-with-secp112r2').ec;
+let ec = new EC('secp112r2');
+
+
 export interface IApplication {
   createNewEmptySession(): void;
   createFreeServersIfNeeded(): void;
@@ -1230,6 +1234,53 @@ export class JupyterApplication implements IApplication, IDisposable {
         }
       }
     );
+
+    this._evm.registerSyncEventHandler(
+      EventTypeMain.GetLicenseEvent,
+      (event) => {
+        if (appData.license !== "") {
+          const isValid = this._isValidLicense(appData.license);
+          if (isValid) {
+            return appData.license;
+          }
+          return "";
+        }
+        return appData.license;
+      }
+    );
+
+    this._evm.registerSyncEventHandler(
+      EventTypeMain.ValidateLicenseEvent,
+      (event, license: string) => {
+        try {
+          const isValid = this._isValidLicense(license);
+          if (isValid) {
+            appData.license = license;
+            appData.licenseValidationDate = (new Date()).toDateString();
+            appData.save();
+          }
+          return isValid;
+        } catch (error) {
+          return false;
+        }
+        return false;
+      }
+    );
+  }
+
+  private _isValidLicense(license: string) {
+    try {
+      const publicKey = '040deaefed80ffd5c38d346d961c2985ca60dada76b7f93c05071b087c';
+      const keyPub = ec.keyFromPublic(publicKey, 'hex');
+      const [msgHash, signature] = license.split('.')
+
+      const ss = Buffer.from(signature, 'base64');
+      const isValid = keyPub.verify(msgHash, ss);
+      return isValid;
+    } catch (error) {
+      return false;
+    }
+    return false;
   }
 
   private _showUpdateDialog(

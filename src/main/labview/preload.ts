@@ -15,6 +15,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   recipeOpenFolder: () => {
     return ipcRenderer.invoke(EventTypeMain.SelectDirectoryPath);
   },
+  getLicense: () => {
+    return ipcRenderer.invoke(EventTypeMain.GetLicenseEvent);
+  },
+  validateLicense: (license: string) => {
+    return ipcRenderer.invoke(EventTypeMain.ValidateLicenseEvent, license);
+  }
 });
 
 export { };

@@ -84,6 +84,8 @@ export enum EventTypeMain {
   SetSettings = 'set-settings',
   SetupCLICommandWithElevatedRights = 'setup-cli-command',
   RecipeOpenFile = 'recipeOpenFile',
+  GetLicenseEvent = 'get-license-event',
+  ValidateLicenseEvent = 'validate-license-event',
 }
 
 // events sent to Renderer process

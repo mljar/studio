@@ -173,6 +173,17 @@ export class ApplicationData {
     if ('updateBundledEnvOnRestart' in jsonData) {
       this.updateBundledEnvOnRestart = jsonData.updateBundledEnvOnRestart;
     }
+    // license validation code
+    if ('license' in jsonData) {
+      this.license = jsonData.license;
+    }
+    if ('licenseValidationDate' in jsonData) {
+      this.licenseValidationDate = jsonData.licenseValidationDate;
+    }
+    if ('licenseValidationOnline' in jsonData) {
+      this.licenseValidationOnline = jsonData.licenseValidationOnline;
+    }
+
   }
 
   save() {
@@ -241,16 +252,23 @@ export class ApplicationData {
       });
     }
 
-    appDataJSON.newsList = [];
-    for (const newsItem of this.newsList) {
-      appDataJSON.newsList.push({
-        title: newsItem.title,
-        link: newsItem.link
-      });
-    }
+    // appDataJSON.newsList = [];
+    // for (const newsItem of this.newsList) {
+    //   appDataJSON.newsList.push({
+    //     title: newsItem.title,
+    //     link: newsItem.link
+    //   });
+    // }
 
     if (this.updateBundledEnvOnRestart) {
       appDataJSON.updateBundledEnvOnRestart = true;
+    }
+
+    // license validation code
+    if (this.license !== '') {
+      appDataJSON.license = this.license;
+      appDataJSON.licenseValidationDate = this.licenseValidationDate;
+      appDataJSON.licenseValidationOnline = this.licenseValidationOnline;
     }
 
     fs.writeFileSync(appDataPath, JSON.stringify(appDataJSON, null, 2));
@@ -300,7 +318,7 @@ export class ApplicationData {
       return isRemote
         ? session.remoteURL === item.remoteURL
         : session.workingDirectory === item.workingDirectory &&
-            filesToOpenCompare(session.filesToOpen, item.filesToOpen);
+        filesToOpenCompare(session.filesToOpen, item.filesToOpen);
     });
 
     const now = new Date();
@@ -384,6 +402,10 @@ export class ApplicationData {
       return rhs.date.valueOf() - lhs.date.valueOf();
     });
   }
+
+  license: string = '';
+  licenseValidationDate: string = '';
+  licenseValidationOnline: boolean = false;
 
   newsList: INewsItem[] = [];
   /**
