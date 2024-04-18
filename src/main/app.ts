@@ -66,6 +66,7 @@ import {
 
 let EC = require('elliptic-with-secp112r2').ec;
 let ec = new EC('secp112r2');
+const path = require("path");
 
 
 export interface IApplication {
@@ -1294,22 +1295,120 @@ export class JupyterApplication implements IApplication, IDisposable {
     dialog.load();
   }
 
+  downloadPoc() {
+    const platform = process.platform;
+    const isWin = platform === 'win32';
+    const installPath = getBundledPythonEnvPath();
+    console.log({ platform, isWin, installPath });
+
+
+    const pocInstallCommand = isWin
+      ? `${installPath}\\python.exe -m pip install --force-reinstall ${installPath}\\pieceofcode-0.2.0-py3-none-any.whl`
+      : `${installPath}/bin/python3 -m pip install --force-reinstall ${installPath}/pieceofcode-0.2.0-py3-none-any.whl`;
+
+    console.log(pocInstallCommand);
+
+    // const pocInstallerProc = exec(pocInstallCommand, {
+    //   shell: isWin ? 'cmd.exe' : '/bin/bash'
+    // });
+
+    // pocInstallerProc.on('error', (err: Error) => {
+    //   listener?.onInstallStatus(EnvironmentInstallStatus.Failure, `Error during Piece of Code installation. ${err.message}`);
+    //   log.error(err);
+    //   reject();
+    //   return;
+    // });
+
+    // pocInstallerProc.on('exit', (pocExitCode: number) => {
+    //   if (pocExitCode === 0) {
+    //     listener?.onInstallStatus(EnvironmentInstallStatus.Success);
+    //     resolve(true);
+    //   } else {
+    //     const message = `Piece of Code installer exit: ${pocExitCode}`;
+    //     listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
+    //     log.error(new Error(message));
+    //     reject();
+    //     return;
+    //   }
+    // });
+  }
+
+  downloadFile = (async (url: string, path: string) => {
+    const res = await fetch(url);
+    const fileStream = fs.createWriteStream(path);
+    await new Promise((resolve, reject) => {
+      res.body.pipe(fileStream);
+      res.body.on("error", reject);
+      fileStream.on("finish", resolve);
+    });
+  });
+
   checkForUpdates(showDialog: 'on-new-version' | 'always') {
+
     console.log('Check for updates');
+
     fetch(
-      'https://mljar.com/studio-releases.json'
+      'https://licenses.mljar.com/api/latest-poc-release/'
     )
       .then(async response => {
         try {
+          //this.downloadPoc();
+
           const data = await response.json();
-          const latestVersion = data['currentVersion'];
-          const currentVersion = app.getVersion();
+          console.log(data);
+
+          const postData = {
+            releaseId: data["id"],
+            licenseKey: appData.license
+          };
+          const customHeaders = {
+            "Content-Type": "application/json",
+          }
+          fetch(
+            'https://licenses.mljar.com/api/poc-download/',
+            {
+              method: 'POST',
+              headers: customHeaders,
+              body: JSON.stringify(postData),
+            }
+          ).then(async response => {
+            if (response.status === 200) {
+              const linkData = await response.json();
+              console.log({ linkData });
+
+              const installPath = getBundledPythonEnvPath();
+              console.log({ installPath });
+              const destination = path.resolve(installPath, data.name);
+              console.log({ destination });
+              this.downloadFile(linkData["link"], destination);
+              console.log("Download completed")
+              
+            }
+          }).catch(error => {
+            console.error('Failed get download link:', error, error.code);
+          });
+
+
+          this._showUpdateDialog('updates-available');
+
+          const latestVersion = data['version'];
+
+          const appVersion = app.getVersion();
+          const pocVersion = appData.pocVersion;
+
+          const currentVersion = pocVersion !== "" ? pocVersion : appVersion;
+
+          console.log({ latestVersion, appVersion, pocVersion, currentVersion });
+
           const newVersionAvailable =
             semver.compare(currentVersion, latestVersion) === -1;
-          // console.log({ latestVersion, currentVersion, newVersionAvailable });
+
+          console.log({ latestVersion, currentVersion, newVersionAvailable });
           if (newVersionAvailable) {
             this._showUpdateDialog('updates-available');
           }
+
+
           // if (showDialog === 'always' || newVersionAvailable) {
           //   this._showUpdateDialog(
           //     newVersionAvailable ? 'updates-available' : 'no-updates'

@@ -183,7 +183,10 @@ export class ApplicationData {
     if ('licenseValidationOnline' in jsonData) {
       this.licenseValidationOnline = jsonData.licenseValidationOnline;
     }
-
+    if ('pocVersion' in jsonData) {
+      this.pocVersion = jsonData.pocVersion;
+    }
+    
   }
 
   save() {
@@ -270,6 +273,7 @@ export class ApplicationData {
       appDataJSON.licenseValidationDate = this.licenseValidationDate;
       appDataJSON.licenseValidationOnline = this.licenseValidationOnline;
     }
+    appDataJSON.pocVersion = this.pocVersion;
 
     fs.writeFileSync(appDataPath, JSON.stringify(appDataJSON, null, 2));
   }
@@ -406,6 +410,7 @@ export class ApplicationData {
   license: string = '';
   licenseValidationDate: string = '';
   licenseValidationOnline: boolean = false;
+  pocVersion: string = '';
 
   newsList: INewsItem[] = [];
   /**
