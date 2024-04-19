@@ -16,13 +16,24 @@ export class UpdateDialog {
       preload: path.join(__dirname, './preload.js')
     });
 
-    const message =
-      options.type === 'error'
-        ? 'Error occurred while checking for updates!'
-        : options.type === 'no-updates'
-        ? 'There are no updates available.'
-        : `There is a new version available. Download the latest version from <a href="javascript:void(0)" onclick='handleReleasesLink(this);'>https://licenses.mljar.com</a>.`;
+    let message = '';
 
+    if (options.type === 'error') {
+      message = 'Error occurred while checking for updates!';
+    } else if (options.type === 'no-updates') {
+      message = 'There are no updates available.';
+    } else {
+      if (options.isPro) {
+        message = `There is a new version (${options.newestVersion}) available. 
+        <br/><br/>
+        <a href="javascript:void(0)" onclick='handleUpdate(this);'>Update</a>
+        `;
+      } else {
+        message = `There is a new version (${options.newestVersion}) available. Download the latest version from 
+        <a href="javascript:void(0)" onclick='handleReleasesLink(this);'>https://licenses.mljar.com</a>.`;
+      }
+
+    }
     const template = `
       <style>
         .update-result-container {
@@ -46,6 +57,11 @@ export class UpdateDialog {
       </div>
 
       <script>
+        
+        function handleUpdate(el) {
+          window.electronAPI.launchAutomaticUpdate('${options.pocName}', '${options.newestVersion}', ${options.releaseId});
+        }
+
         function handleReleasesLink(el) {
           window.electronAPI.launchInstallerDownloadPage();
         }
@@ -70,5 +86,9 @@ export namespace UpdateDialog {
   export interface IOptions {
     isDarkTheme: boolean;
     type: 'updates-available' | 'error' | 'no-updates';
+    isPro: boolean;
+    newestVersion: string;
+    pocName?: string,
+    releaseId?: number;
   }
 }

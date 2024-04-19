@@ -14,18 +14,7 @@ import { IRegistry, Registry } from './registry';
 import fetch from 'node-fetch';
 import * as semver from 'semver';
 import * as fs from 'fs';
-import {
-  bundledEnvironmentIsInstalled,
-  clearSession,
-  EnvironmentInstallStatus,
-  getBundledPythonEnvPath,
-  getBundledPythonPath,
-  installBundledEnvironment,
-  isDarkTheme,
-  pythonPathForEnvPath,
-  setupJlabCLICommandWithElevatedRights,
-  waitForDuration
-} from './utils';
+
 import { IServerFactory, JupyterServerFactory } from './server';
 import { connectAndGetServerInfo, IJupyterServerInfo } from './connect';
 import { UpdateDialog } from './updatedialog/updatedialog';
@@ -45,6 +34,18 @@ import {
   SessionWindow
 } from './sessionwindow/sessionwindow';
 import { appData } from './config/appdata';
+import {
+  bundledEnvironmentIsInstalled,
+  clearSession,
+  EnvironmentInstallStatus,
+  getBundledPythonEnvPath,
+  getBundledPythonPath,
+  installBundledEnvironment,
+  isDarkTheme,
+  pythonPathForEnvPath,
+  setupJlabCLICommandWithElevatedRights,
+  waitForDuration
+} from './utils';
 import { ICLIArguments, IDisposable, IRect } from './tokens';
 import { SessionConfig } from './config/sessionconfig';
 import { AsyncEventHandlerMain, EventManager } from './eventmanager';
@@ -67,7 +68,8 @@ import {
 let EC = require('elliptic-with-secp112r2').ec;
 let ec = new EC('secp112r2');
 const path = require("path");
-
+import { spawn } from 'child_process';
+import { UpdateSuccessDialog } from './updatesuccesdialog/updatesuccessdialog';
 
 export interface IApplication {
   createNewEmptySession(): void;
@@ -653,7 +655,6 @@ export class JupyterApplication implements IApplication, IDisposable {
       // handle update app click
       EventTypeMain.LaunchInstallerDownloadPage,
       () => {
-        console.log('Update to new version');
         shell.openExternal(
           'https://licenses.mljar.com'
         );
@@ -772,6 +773,8 @@ export class JupyterApplication implements IApplication, IDisposable {
               addUserSetEnvironment(installPath, true);
               const pythonPath = pythonPathForEnvPath(installPath, true);
               this._registry.addEnvironment(pythonPath);
+              appData.pocVersion = app.getVersion();
+              appData.save();
             }
           },
           get forceOverwrite() {
@@ -1267,7 +1270,15 @@ export class JupyterApplication implements IApplication, IDisposable {
         return false;
       }
     );
+
+    this._evm.registerEventHandler(
+      EventTypeMain.LaunchAutomaticUpdate,
+      (_event, name, version, releaseId) => {
+        this.automaticUpdate(name, version, releaseId);
+      }
+    );
   }
+
 
   private _isValidLicense(license: string) {
     try {
@@ -1285,52 +1296,74 @@ export class JupyterApplication implements IApplication, IDisposable {
   }
 
   private _showUpdateDialog(
-    type: 'updates-available' | 'error' | 'no-updates'
+    type: 'updates-available' | 'error' | 'no-updates',
+    isPro: boolean,
+    newestVersion: string,
+    name: string,
+    releaseId: number
   ) {
-    const dialog = new UpdateDialog({
+    this._updateDialog = new UpdateDialog({
       isDarkTheme: false, //isDarkTheme(userSettings.getValue(SettingType.theme)),
-      type
+      type,
+      isPro,
+      newestVersion,
+      pocName: name,
+      releaseId
     });
 
+    this._updateDialog.load();
+  }
+
+  private _showUpdateSuccessDialog() {
+    const dialog = new UpdateSuccessDialog();
     dialog.load();
   }
 
-  downloadPoc() {
+  closeUpdateDialog() {
+    if (this._updateDialog) {
+      this._updateDialog.window.close();
+      this._updateDialog = null;
+    }
+  }
+
+  updatePoc(pocName: string) {
     const platform = process.platform;
     const isWin = platform === 'win32';
     const installPath = getBundledPythonEnvPath();
+
     console.log({ platform, isWin, installPath });
 
-
     const pocInstallCommand = isWin
-      ? `${installPath}\\python.exe -m pip install --force-reinstall ${installPath}\\pieceofcode-0.2.0-py3-none-any.whl`
-      : `${installPath}/bin/python3 -m pip install --force-reinstall ${installPath}/pieceofcode-0.2.0-py3-none-any.whl`;
+      ? `${installPath}\\python.exe -m pip install --force-reinstall ${installPath}\\${pocName}`
+      : `${installPath}/bin/python3 -m pip install --force-reinstall ${installPath}/${pocName}`;
 
-    console.log(pocInstallCommand);
+    const pocInstallerProc = spawn(pocInstallCommand, {
+      shell: isWin ? 'cmd.exe' : '/bin/bash'
+    });
 
-    // const pocInstallerProc = exec(pocInstallCommand, {
-    //   shell: isWin ? 'cmd.exe' : '/bin/bash'
+    // pocInstallerProc.stdout.on('data', function (data) {
+    //   console.log('stdout: ' + data.toString());
     // });
 
-    // pocInstallerProc.on('error', (err: Error) => {
-    //   listener?.onInstallStatus(EnvironmentInstallStatus.Failure, `Error during Piece of Code installation. ${err.message}`);
-    //   log.error(err);
-    //   reject();
-    //   return;
+    // pocInstallerProc.stderr.on('data', function (data) {
+    //   console.log('stderr: ' + data.toString());
     // });
 
-    // pocInstallerProc.on('exit', (pocExitCode: number) => {
-    //   if (pocExitCode === 0) {
-    //     listener?.onInstallStatus(EnvironmentInstallStatus.Success);
-    //     resolve(true);
-    //   } else {
-    //     const message = `Piece of Code installer exit: ${pocExitCode}`;
-    //     listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
-    //     log.error(new Error(message));
-    //     reject();
-    //     return;
-    //   }
-    // });
+    pocInstallerProc.on('error', (err: Error) => {
+      log.error('Error updating Piece of Code', err);
+      return;
+    });
+
+    pocInstallerProc.on('exit', (pocExitCode: number) => {
+      if (pocExitCode === 0) {
+        console.log('Successful update.');
+        this._showUpdateSuccessDialog();
+      } else {
+        const message = `Piece of Code installer exit: ${pocExitCode}`;
+        log.error('Problems updating Piece of Code', new Error(message));
+        return;
+      }
+    });
   }
 
   downloadFile = (async (url: string, path: string) => {
@@ -1343,6 +1376,38 @@ export class JupyterApplication implements IApplication, IDisposable {
     });
   });
 
+  automaticUpdate = (name: string, version: string, releaseId: number) => {
+    this.closeUpdateDialog();
+    const postData = {
+      releaseId: releaseId,
+      licenseKey: appData.license
+    };
+    const customHeaders = {
+      "Content-Type": "application/json",
+    }
+    fetch(
+      'https://licenses.mljar.com/api/poc-download/',
+      {
+        method: 'POST',
+        headers: customHeaders,
+        body: JSON.stringify(postData),
+      }
+    ).then(async response => {
+      if (response.status === 200) {
+        const linkData = await response.json();
+        const installPath = getBundledPythonEnvPath();
+        const destination = path.resolve(installPath, name);
+        await this.downloadFile(linkData["link"], destination);
+        console.log("Download completed")
+        this.updatePoc(name);
+        appData.pocVersion = version;
+        appData.save();
+      }
+    }).catch(error => {
+      console.error('Failed get download link:', error, error.code);
+    });
+  }
+
   checkForUpdates(showDialog: 'on-new-version' | 'always') {
 
     console.log('Check for updates');
@@ -1352,47 +1417,10 @@ export class JupyterApplication implements IApplication, IDisposable {
     )
       .then(async response => {
         try {
-          //this.downloadPoc();
-
           const data = await response.json();
-          console.log(data);
-
-          const postData = {
-            releaseId: data["id"],
-            licenseKey: appData.license
-          };
-          const customHeaders = {
-            "Content-Type": "application/json",
-          }
-          fetch(
-            'https://licenses.mljar.com/api/poc-download/',
-            {
-              method: 'POST',
-              headers: customHeaders,
-              body: JSON.stringify(postData),
-            }
-          ).then(async response => {
-            if (response.status === 200) {
-              const linkData = await response.json();
-              console.log({ linkData });
-
-              const installPath = getBundledPythonEnvPath();
-              console.log({ installPath });
-              const destination = path.resolve(installPath, data.name);
-              console.log({ destination });
-              this.downloadFile(linkData["link"], destination);
-              console.log("Download completed")
-              
-            }
-          }).catch(error => {
-            console.error('Failed get download link:', error, error.code);
-          });
-
-
-          this._showUpdateDialog('updates-available');
-
+          const newestVersion = data.version;
+          const isPro = appData.license !== "";
           const latestVersion = data['version'];
-
           const appVersion = app.getVersion();
           const pocVersion = appData.pocVersion;
 
@@ -1403,29 +1431,15 @@ export class JupyterApplication implements IApplication, IDisposable {
           const newVersionAvailable =
             semver.compare(currentVersion, latestVersion) === -1;
 
-          console.log({ latestVersion, currentVersion, newVersionAvailable });
-          if (newVersionAvailable) {
-            this._showUpdateDialog('updates-available');
+          if(newVersionAvailable) {
+            this._showUpdateDialog('updates-available', isPro, newestVersion, data["name"], data["id"]);
           }
-
-
-          // if (showDialog === 'always' || newVersionAvailable) {
-          //   this._showUpdateDialog(
-          //     newVersionAvailable ? 'updates-available' : 'no-updates'
-          //   );
-          // }
-
+          
         } catch (error) {
-          // if (showDialog === 'always') {
-          //   this._showUpdateDialog('error');
-          // }
           console.error('Failed to check for updates:', error);
         }
       })
       .catch(error => {
-        // if (showDialog === 'always') {
-        //   this._showUpdateDialog('error');
-        // }
         console.error('Failed to check for updates:', error);
       });
 
@@ -1449,6 +1463,7 @@ export class JupyterApplication implements IApplication, IDisposable {
   private _sessionWindowManager: SessionWindowManager;
   private _evm = new EventManager();
   private _settingsDialog: SettingsDialog;
+  private _updateDialog: UpdateDialog;
   private _managePythonEnvDialog: ManagePythonEnvironmentDialog;
   private _aboutDialog: AboutDialog;
   private _isDarkTheme: boolean;

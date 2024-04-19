@@ -19,7 +19,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
   launchInstallerDownloadPage: () => {
     ipcRenderer.send(EventTypeMain.LaunchInstallerDownloadPage);
+  },
+  launchAutomaticUpdate: (name: string, version: string, releaseId: number) => {
+    ipcRenderer.send(EventTypeMain.LaunchAutomaticUpdate, name, version, releaseId);
   }
 });
 
-export {};
+export { };

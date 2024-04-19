@@ -86,6 +86,7 @@ export enum EventTypeMain {
   RecipeOpenFile = 'recipeOpenFile',
   GetLicenseEvent = 'get-license-event',
   ValidateLicenseEvent = 'validate-license-event',
+  LaunchAutomaticUpdate = 'launch-automatic-update',
 }
 
 // events sent to Renderer process
