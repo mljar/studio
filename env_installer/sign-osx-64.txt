@@ -100,7 +100,7 @@ lib/libbrotlidec.1.1.0.dylib
 lib/libbrotlienc.1.1.0.dylib
 lib/libbz2.1.0.8.dylib
 lib/libc++.1.0.dylib
-lib/libcares.2.13.1.dylib
+lib/libcares.2.12.0.dylib
 lib/libcharset.1.dylib
 lib/libcom_err.3.0.dylib
 lib/libcrypto.3.dylib
@@ -115,7 +115,6 @@ lib/libform.6.dylib
 lib/libformw.6.dylib
 lib/libfreetype.6.dylib
 lib/libgcc_s.1.1.dylib
-lib/libgcc_s.1.dylib
 lib/libgfortran.5.dylib
 lib/libgssapi_krb5.2.2.dylib
 lib/libgssrpc.4.2.dylib
@@ -145,11 +144,13 @@ lib/libmenuw.6.dylib
 lib/libncurses.6.dylib
 lib/libncursesw.6.dylib
 lib/libnghttp2.14.dylib
+lib/libnghttp2.dylib
 lib/libomp.dylib
-lib/libopenblasp-r0.3.26.dylib
+lib/libopenblas.0.dylib
 lib/libopenjp2.2.5.2.dylib
 lib/libpanel.6.dylib
 lib/libpanelw.6.dylib
+lib/libpng.dylib
 lib/libpng16.16.dylib
 lib/libpython3.11.dylib
 lib/libquadmath.0.dylib
@@ -282,8 +283,6 @@ lib/python3.11/lib-dynload/unicodedata.cpython-311-darwin.so
 lib/python3.11/lib-dynload/xxlimited.cpython-311-darwin.so
 lib/python3.11/lib-dynload/xxlimited_35.cpython-311-darwin.so
 lib/python3.11/lib-dynload/zlib.cpython-311-darwin.so
-lib/python3.11/lib2to3/Grammar3.11.8.final.0.pickle
-lib/python3.11/lib2to3/PatternGrammar3.11.8.final.0.pickle
 lib/python3.11/site-packages/AppKit/_AppKit.cpython-311-darwin.so
 lib/python3.11/site-packages/AppKit/_inlines.cpython-311-darwin.so
 lib/python3.11/site-packages/CoreFoundation/_CoreFoundation.cpython-311-darwin.so
@@ -304,7 +303,7 @@ lib/python3.11/site-packages/_cffi_backend.cpython-311-darwin.so
 lib/python3.11/site-packages/_ruamel_yaml.cpython-311-darwin.so
 lib/python3.11/site-packages/contourpy/_contourpy.cpython-311-darwin.so
 lib/python3.11/site-packages/debugpy/_vendored/pydevd/_pydevd_bundle/pydevd_cython.cpython-311-darwin.so
-lib/python3.11/site-packages/debugpy/_vendored/pydevd/pydevd_attach_to_process/attach_x86_64.dylib
+lib/python3.11/site-packages/debugpy/_vendored/pydevd/pydevd_attach_to_process/attach_linux_amd64.dylib
 lib/python3.11/site-packages/fontTools/cu2qu/cu2qu.cpython-311-darwin.so
 lib/python3.11/site-packages/fontTools/feaLib/lexer.cpython-311-darwin.so
 lib/python3.11/site-packages/fontTools/misc/bezierTools.cpython-311-darwin.so
