@@ -59,8 +59,9 @@ jobs:
           yarn create_env_installer:${{ matrix.cfg.platform }}
 
       - name: Update sign list
+        if: matrix.cfg.platform == 'osx-64' || matrix.cfg.platform == 'osx-arm64' 
         run: |
-          yarn update_binary_sign_list
+          yarn update_binary_sign_list:${{ matrix.cfg.platform }}
 
       # contents of tarball needs to be signed for notarization
       - name: Codesign Application Server
