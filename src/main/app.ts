@@ -1426,7 +1426,7 @@ export class JupyterApplication implements IApplication, IDisposable {
 
           const currentVersion = pocVersion !== "" ? pocVersion : appVersion;
 
-          console.log({ latestVersion, appVersion, pocVersion, currentVersion });
+          // console.log({ latestVersion, appVersion, pocVersion, currentVersion });
 
           const newVersionAvailable =
             semver.compare(currentVersion, latestVersion) === -1;
@@ -1434,7 +1434,7 @@ export class JupyterApplication implements IApplication, IDisposable {
           if(newVersionAvailable) {
             this._showUpdateDialog('updates-available', isPro, newestVersion, data["name"], data["id"]);
           }
-          
+
         } catch (error) {
           console.error('Failed to check for updates:', error);
         }
