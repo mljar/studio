@@ -1,10 +1,14 @@
 #!/bin/bash
+conda activate
 
 source .env
 
 platform="osx-arm64"
 
 yarn create_env_installer:$platform
+
+yarn update_binary_sign_list:$platform
+
 yarn extract_env_installer:$platform
 
 security create-keychain -p $ENV_INSTALLER_KEYCHAIN_PASS build.keychain
