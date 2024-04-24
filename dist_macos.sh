@@ -1,4 +1,8 @@
 #!/bin/bash
+
+yarn install 
+yarn build
+
 conda activate
 
 source .env
