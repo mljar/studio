@@ -367,8 +367,8 @@ export async function installCondaPackEnvironment(
         console.log('Install Piece of Code ...');
 
         const pocInstallCommand = isWin
-          ? `${installPath}\\python.exe -m pip install --force-reinstall ${installPath}\\pieceofcode-0.2.2-py3-none-any.whl`
-          : `${installPath}/bin/python3 -m pip install --force-reinstall ${installPath}/pieceofcode-0.2.2-py3-none-any.whl`;
+          ? `${installPath}\\python.exe -m pip install --force-reinstall ${installPath}\\pieceofcode-0.3.0-py3-none-any.whl`
+          : `${installPath}/bin/python3 -m pip install --force-reinstall ${installPath}/pieceofcode-0.3.0-py3-none-any.whl`;
 
         const pocInstallerProc = exec(pocInstallCommand, {
           shell: isWin ? 'cmd.exe' : '/bin/bash'
