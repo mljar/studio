@@ -1431,7 +1431,7 @@ export class JupyterApplication implements IApplication, IDisposable {
           const newVersionAvailable =
             semver.compare(currentVersion, latestVersion) === -1;
 
-          if(newVersionAvailable) {
+          if (newVersionAvailable) {
             this._showUpdateDialog('updates-available', isPro, newestVersion, data["name"], data["id"]);
           }
 

@@ -109,7 +109,7 @@ export function getBundledPythonPath(): string {
 }
 
 export function isDarkTheme(themeType: string) {
-  return false;
+  //return false;
   if (themeType === 'light') {
     return false;
   } else if (themeType === 'dark') {
