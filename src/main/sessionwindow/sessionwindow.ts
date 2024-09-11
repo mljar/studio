@@ -822,24 +822,19 @@ export class SessionWindow implements IDisposable {
           this._showProgressView(
             'Invalid Environment',
             `<div class="message-row">${message}</div>
-          ${
-            error?.type === PythonEnvResolveErrorType.RequirementsNotSatisfied
-              ? `<div class="message-row"><a href="javascript:void(0);" onclick="sendMessageToMain('${
-                  EventTypeMain.InstallPythonEnvRequirements
-                }', '${encodeURIComponent(
-                  path
-                )}', 'restart-server')">Install the requirements for me and restart the server</a></div>`
+          ${error?.type === PythonEnvResolveErrorType.RequirementsNotSatisfied
+              ? `<div class="message-row"><a href="javascript:void(0);" onclick="sendMessageToMain('${EventTypeMain.InstallPythonEnvRequirements
+              }', '${encodeURIComponent(
+                path
+              )}', 'restart-server')">Install the requirements for me and restart the server</a></div>`
               : ''
-          }
-          <div class="message-row"><a href="javascript:void(0);" onclick="sendMessageToMain('${
-            EventTypeMain.ShowEnvSelectPopup
-          }')">Select another environment</a></div>
-          <div class="message-row"><a href="javascript:void(0);" onclick="sendMessageToMain('${
-            EventTypeMain.ShowLogs
-          }')">Show logs</a></div>
-          <div class="message-row"><a href="javascript:void(0);" onclick="sendMessageToMain('${
-            EventTypeMain.HideProgressView
-          }')">Cancel</a></div>`,
+            }
+          <div class="message-row"><a href="javascript:void(0);" onclick="sendMessageToMain('${EventTypeMain.ShowEnvSelectPopup
+            }')">Select another environment</a></div>
+          <div class="message-row"><a href="javascript:void(0);" onclick="sendMessageToMain('${EventTypeMain.ShowLogs
+            }')">Show logs</a></div>
+          <div class="message-row"><a href="javascript:void(0);" onclick="sendMessageToMain('${EventTypeMain.HideProgressView
+            }')">Cancel</a></div>`,
             false
           );
 
@@ -1019,8 +1014,7 @@ export class SessionWindow implements IDisposable {
           content = [
             `type: ${isLocalUrl ? 'local' : 'remote'} connection`,
             `url: ${serverInfo.url}`,
-            `session data: ${
-              serverInfo.persistSessionData ? '' : 'not '
+            `session data: ${serverInfo.persistSessionData ? '' : 'not '
             }persisted`
           ].join('\n');
         }
@@ -1409,23 +1403,19 @@ export class SessionWindow implements IDisposable {
         this._showProgressView(
           'Invalid Environment configured for project',
           `<div class="message-row">${message}</div>
-          ${
-            error?.type === PythonEnvResolveErrorType.RequirementsNotSatisfied
-              ? `<div class="message-row"><a href="javascript:void(0);" onclick="sendMessageToMain('${
-                  EventTypeMain.InstallPythonEnvRequirements
-                }', '${encodeURIComponent(
-                  pythonPath
-                )}')">Install the requirements for me</a></div>`
-              : ''
+          ${error?.type === PythonEnvResolveErrorType.RequirementsNotSatisfied
+            ? `<div class="message-row"><a href="javascript:void(0);" onclick="sendMessageToMain('${EventTypeMain.InstallPythonEnvRequirements
+            }', '${encodeURIComponent(
+              pythonPath
+            )}')">Install the requirements for me</a></div>`
+            : ''
           } 
-        ${
-          recentSessionIndex !== undefined
+        ${recentSessionIndex !== undefined
             ? `<div class="message-row"><a href="javascript:void(0);" onclick="sendMessageToMain('${EventTypeMain.OpenRecentSessionWithDefaultEnv}', ${recentSessionIndex})">Reset to default Python environment</a></div>`
             : ''
-        }
-         <div class="message-row"><a href="javascript:void(0);" onclick="sendMessageToMain('${
-           EventTypeMain.HideProgressView
-         }')">Cancel</a></div>`,
+          }
+         <div class="message-row"><a href="javascript:void(0);" onclick="sendMessageToMain('${EventTypeMain.HideProgressView
+          }')">Cancel</a></div>`,
           false
         );
 

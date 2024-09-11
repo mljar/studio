@@ -397,7 +397,6 @@ export class ApplicationData {
 
   static getAppDataPath(): string {
     const userDataDir = getUserDataDir();
-    console.log('getAppDataPath', path.join(userDataDir, 'app-data.json'));
     return path.join(userDataDir, 'app-data.json');
   }
 

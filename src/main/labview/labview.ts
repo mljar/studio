@@ -324,7 +324,7 @@ export class LabView implements IDisposable {
         }
       }
     );
-
+    
     if (this._wsSettings.getValue(SettingType.syncJupyterLabTheme)) {
       this._evm.registerEventHandler(EventTypeMain.LabUIReady, event => {
         if (event.sender !== this._view.webContents) {
@@ -347,6 +347,8 @@ export class LabView implements IDisposable {
   }
 
   private async _setJupyterLabTheme(theme: string) {
+    return;
+    
     const themeName = isDarkTheme(theme)
       ? 'JupyterLab Dark'
       : 'JupyterLab Light';
