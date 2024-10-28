@@ -361,6 +361,8 @@ const installSteps: InstallStep[] = [
   { type: 'wheel', file: 'jupyter_ai_magics-2.26.0-py3-none-any.whl' },
   { type: 'wheel', file: 'pieceofcode-0.4.0-py3-none-any.whl' },
   { type: 'pip', package: 'langchain-openai==0.1.25' },
+  { type: 'pip', package: 'dask[dataframe]' },
+
 ];
 
 function installWheel(wheelFile: string): Promise<void> {
@@ -390,10 +392,10 @@ function installWheel(wheelFile: string): Promise<void> {
 
     installerProc.on('exit', (exitCode: number) => {
       if (exitCode === 0) {
-        console.log(`Paczka ${wheelFile} została zainstalowana pomyślnie.`);
+        console.log(`Package ${wheelFile} installed sucesfully.`);
         resolve();
       } else {
-        const message = `Instalator paczki ${wheelFile} zakończył się z kodem: ${exitCode}`;
+        const message = `Package installator ${wheelFile} end with code: ${exitCode}`;
         listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
         log.error(new Error(message));
         reject(new Error(message));
@@ -404,7 +406,7 @@ function installWheel(wheelFile: string): Promise<void> {
 
 function installPipPackage(packageName: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    console.log(`Instalacja paczki za pomocą pip: ${packageName}`);
+    console.log(`Instalation with pip: ${packageName}`);
 
     const pythonExecutable = isWin
       ? `"${installPath}\\python.exe"`
@@ -417,7 +419,7 @@ function installPipPackage(packageName: string): Promise<void> {
     });
 
     installerProc.on('error', (err: Error) => {
-      const message = `Błąd podczas instalacji paczki ${packageName}: ${err.message}`;
+      const message = `Error during installation: ${packageName}: ${err.message}`;
       listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
       log.error(err);
       reject(new Error(message));
@@ -425,10 +427,10 @@ function installPipPackage(packageName: string): Promise<void> {
 
     installerProc.on('exit', (exitCode: number) => {
       if (exitCode === 0) {
-        console.log(`Paczka ${packageName} została zainstalowana pomyślnie.`);
+        console.log(`Package ${packageName} instaled succeeds.`);
         resolve();
       } else {
-        const message = `Instalator paczki ${packageName} zakończył się z kodem: ${exitCode}`;
+        const message = `Package installator ${packageName} end with code: ${exitCode}`;
         listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
         log.error(new Error(message));
         reject(new Error(message));
