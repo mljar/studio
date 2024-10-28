@@ -8,6 +8,7 @@ dependencies:
   - ipympl >= 0.8.2
   - pip
   - python 3.11*
+  - jupyter-ai[all]
 platforms:
   - linux-64
   # - linux-aarch64

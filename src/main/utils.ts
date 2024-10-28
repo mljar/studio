@@ -342,7 +342,6 @@ export async function installCondaPackEnvironment(
       ? `${installPath}\\Scripts\\activate.bat && conda-unpack`
       : `source "${installPath}/bin/activate" && conda-unpack`;
 
-    // only unsign when installing from bundled installer
     if (platform === 'darwin' && isBundledInstaller) {
       unpackCommand = `${createUnsignScriptInEnv(
         installPath
@@ -353,55 +352,128 @@ export async function installCondaPackEnvironment(
       shell: isWin ? 'cmd.exe' : '/bin/bash'
     });
 
-    // installerProc.on('exit', (procExitCode:number) => {
+   type InstallStep =
+  | { type: 'wheel'; file: string }
+  | { type: 'pip'; package: string };
+
+const installSteps: InstallStep[] = [
+  { type: 'wheel', file: 'jupyter_ai-2.26.0-py3-none-any.whl' },
+  { type: 'wheel', file: 'jupyter_ai_magics-2.26.0-py3-none-any.whl' },
+  { type: 'wheel', file: 'pieceofcode-0.4.0-py3-none-any.whl' },
+  { type: 'pip', package: 'langchain-openai==0.1.25' },
+];
+
+function installWheel(wheelFile: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    console.log(`Package installation from wheel file: ${wheelFile}`);
+
+    const wheelPath = isWin
+      ? `"${installPath}\\${wheelFile}"`
+      : `"${installPath}/${wheelFile}"`;
+
+    const pythonExecutable = isWin
+      ? `"${installPath}\\python.exe"`
+      : `"${installPath}/bin/python3"`;
+
+    const installCommand = `${pythonExecutable} -m pip install --force-reinstall ${wheelPath}`;
+
+    const installerProc = exec(installCommand, {
+      shell: isWin ? 'cmd.exe' : '/bin/bash',
+    });
+
+    installerProc.on('error', (err: Error) => {
+      const message = `Error during installation ${wheelFile}: ${err.message}`;
+      listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
+      log.error(err);
+      reject(new Error(message));
+    });
+
+    installerProc.on('exit', (exitCode: number) => {
+      if (exitCode === 0) {
+        console.log(`Paczka ${wheelFile} została zainstalowana pomyślnie.`);
+        resolve();
+      } else {
+        const message = `Instalator paczki ${wheelFile} zakończył się z kodem: ${exitCode}`;
+        listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
+        log.error(new Error(message));
+        reject(new Error(message));
+      }
+    });
+  });
+}
+
+function installPipPackage(packageName: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    console.log(`Instalacja paczki za pomocą pip: ${packageName}`);
+
+    const pythonExecutable = isWin
+      ? `"${installPath}\\python.exe"`
+      : `"${installPath}/bin/python3"`;
+
+    const installCommand = `${pythonExecutable} -m pip install --force-reinstall ${packageName}`;
+
+    const installerProc = exec(installCommand, {
+      shell: isWin ? 'cmd.exe' : '/bin/bash',
+    });
+
+    installerProc.on('error', (err: Error) => {
+      const message = `Błąd podczas instalacji paczki ${packageName}: ${err.message}`;
+      listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
+      log.error(err);
+      reject(new Error(message));
+    });
+
+    installerProc.on('exit', (exitCode: number) => {
+      if (exitCode === 0) {
+        console.log(`Paczka ${packageName} została zainstalowana pomyślnie.`);
+        resolve();
+      } else {
+        const message = `Instalator paczki ${packageName} zakończył się z kodem: ${exitCode}`;
+        listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
+        log.error(new Error(message));
+        reject(new Error(message));
+      }
+    });
+  });
+}
+
+async function executeInstallSteps(): Promise<void> {
+  for (const step of installSteps) {
+    if (step.type === 'wheel') {
+      await installWheel(step.file);
+    } else if (step.type === 'pip') {
+      await installPipPackage(step.package);
+    }
+  }
+}
+
+installerProc.on('exit', async (exitCode: number) => {
+  if (exitCode === 0) { 
+    console.log('Main package installation complete. Starting other packages installation...');
+
+    try {
+      await executeInstallSteps();
+      listener?.onInstallStatus(EnvironmentInstallStatus.Success);
+      resolve(true);
+    } catch (error) {
+      reject();
+    }
+
+  } else {
+    const message = `Installer exit: ${exitCode}`;
+    listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
+    log.error(new Error(message));
+    reject();
+    return;
+  }
+}); // installerProc.on('exit', (procExitCode:number) => {
     // const jlabInstallCommand = 'conda install --yes -c conda-forge jupyterlab==4.1.2';
 
     // const jlabInstallerProc = exec(jlabInstallCommand, {
     //   shell: isWin ? 'cmd.exe' : '/bin/bash'
     // });
+  
     
-
-    installerProc.on('exit', (exitCode: number) => {
-      if (exitCode === 0) {
-
-        console.log('Install Piece of Code ...');
-
-        const pocInstallCommand = isWin
-          ? `${installPath}\\python.exe -m pip install --force-reinstall ${installPath}\\pieceofcode-0.4.0-py3-none-any.whl`
-          : `${installPath}/bin/python3 -m pip install --force-reinstall ${installPath}/pieceofcode-0.4.0-py3-none-any.whl`;
-
-        const pocInstallerProc = exec(pocInstallCommand, {
-          shell: isWin ? 'cmd.exe' : '/bin/bash'
-        });
-
-        pocInstallerProc.on('error', (err: Error) => {
-          listener?.onInstallStatus(EnvironmentInstallStatus.Failure, `Error during Piece of Code installation. ${err.message}`);
-          log.error(err);
-          reject();
-          return;
-        });
-
-        pocInstallerProc.on('exit', (pocExitCode: number) => {
-          if (pocExitCode === 0) {
-            listener?.onInstallStatus(EnvironmentInstallStatus.Success);
-            resolve(true);
-          } else {
-            const message = `Piece of Code installer exit: ${pocExitCode}`;
-            listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
-            log.error(new Error(message));
-            reject();
-            return;
-          }
-        });
-
-      } else {
-        const message = `Installer exit: ${exitCode}`;
-        listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
-        log.error(new Error(message));
-        reject();
-        return;
-      }
-    });
   });
 
   //   installerProc.on('error', (err: Error) => {
