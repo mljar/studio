@@ -24,7 +24,7 @@ interface IRecentSessionListItem {
 export class WelcomeView {
   constructor(options: WelcomeView.IOptions) {
     this._registry = options.registry;
-    this._isDarkTheme = true; //options.isDarkTheme;
+    this._isDarkTheme = false; //options.isDarkTheme;
     this._view = new BrowserView({
       webPreferences: {
         preload: path.join(__dirname, './preload.js'),
@@ -37,7 +37,7 @@ export class WelcomeView {
     );
 
     const studioLargeLogoSrc = fs.readFileSync(
-      path.join(__dirname, '../../../app-assets/studio-large-logo-dark.svg')
+      path.join(__dirname, '../../../app-assets/studio-large-logo.svg')
     );
     const notebookIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" viewBox="0 0 22 22">
       <g class="jp-icon-warn0 jp-icon-selectable" fill="#EF6C00">
