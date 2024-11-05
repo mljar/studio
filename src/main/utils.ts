@@ -14,7 +14,7 @@ import {
   exec,
   execFile,
   ExecFileOptions,
-  execFileSync,
+  execFileSync
   //execSync
 } from 'child_process';
 
@@ -316,6 +316,7 @@ export async function installCondaPackEnvironment(
     }
 
     listener?.onInstallStatus(EnvironmentInstallStatus.Started);
+    listener?.onInstallStatus(EnvironmentInstallStatus.Running, '10');
 
     console.log('Unpack conda env ...');
 
@@ -332,6 +333,8 @@ export async function installCondaPackEnvironment(
       return;
     }
 
+    listener?.onInstallStatus(EnvironmentInstallStatus.Running, '20');
+
     markEnvironmentAsJupyterInstalled(installPath, {
       type: 'conda',
       source: 'bundled-installer',
@@ -347,135 +350,149 @@ export async function installCondaPackEnvironment(
         installPath
       )}\n${unpackCommand}`;
     }
-    
+
+    listener?.onInstallStatus(EnvironmentInstallStatus.Running, '30');
+
     const installerProc = exec(unpackCommand, {
       shell: isWin ? 'cmd.exe' : '/bin/bash'
     });
 
-   type InstallStep =
-  | { type: 'wheel'; file: string }
-  | { type: 'pip'; package: string };
+    type InstallStep =
+      | { type: 'wheel'; file: string }
+      | { type: 'pip'; package: string };
 
-const installSteps: InstallStep[] = [
-  { type: 'wheel', file: 'jupyter_ai-2.26.0-py3-none-any.whl' },
-  { type: 'wheel', file: 'jupyter_ai_magics-2.26.0-py3-none-any.whl' },
-  { type: 'wheel', file: 'pieceofcode-0.4.0-py3-none-any.whl' },
-  { type: 'pip', package: 'langchain-openai==0.1.25' },
-  { type: 'pip', package: 'dask[dataframe]' },
+    const installSteps: InstallStep[] = [
+      { type: 'wheel', file: 'jupyter_ai-2.26.0-py3-none-any.whl' },
+      { type: 'wheel', file: 'jupyter_ai_magics-2.26.0-py3-none-any.whl' },
+      { type: 'wheel', file: 'pieceofcode-0.4.0-py3-none-any.whl' },
+      { type: 'pip', package: 'langchain-openai==0.1.25' },
+      { type: 'pip', package: 'dask[dataframe]' }
+    ];
 
-];
+    function installWheel(wheelFile: string): Promise<void> {
+      return new Promise((resolve, reject) => {
+        listener?.onInstallStatus(EnvironmentInstallStatus.Running, '50');
+        console.log(`Package installation from wheel file: ${wheelFile}`);
 
-function installWheel(wheelFile: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    console.log(`Package installation from wheel file: ${wheelFile}`);
+        const wheelPath = isWin
+          ? `"${installPath}\\${wheelFile}"`
+          : `"${installPath}/${wheelFile}"`;
 
-    const wheelPath = isWin
-      ? `"${installPath}\\${wheelFile}"`
-      : `"${installPath}/${wheelFile}"`;
+        const pythonExecutable = isWin
+          ? `"${installPath}\\python.exe"`
+          : `"${installPath}/bin/python3"`;
 
-    const pythonExecutable = isWin
-      ? `"${installPath}\\python.exe"`
-      : `"${installPath}/bin/python3"`;
+        const installCommand = `${pythonExecutable} -m pip install --force-reinstall ${wheelPath}`;
 
-    const installCommand = `${pythonExecutable} -m pip install --force-reinstall ${wheelPath}`;
+        const installerProc = exec(installCommand, {
+          shell: isWin ? 'cmd.exe' : '/bin/bash'
+        });
 
-    const installerProc = exec(installCommand, {
-      shell: isWin ? 'cmd.exe' : '/bin/bash',
-    });
+        installerProc.on('error', (err: Error) => {
+          const message = `Error during installation ${wheelFile}: ${err.message}`;
+          listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
+          log.error(err);
+          reject(new Error(message));
+        });
 
-    installerProc.on('error', (err: Error) => {
-      const message = `Error during installation ${wheelFile}: ${err.message}`;
-      listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
-      log.error(err);
-      reject(new Error(message));
-    });
-
-    installerProc.on('exit', (exitCode: number) => {
-      if (exitCode === 0) {
-        console.log(`Package ${wheelFile} installed sucesfully.`);
-        resolve();
-      } else {
-        const message = `Package installator ${wheelFile} end with code: ${exitCode}`;
-        listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
-        log.error(new Error(message));
-        reject(new Error(message));
-      }
-    });
-  });
-}
-
-function installPipPackage(packageName: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    console.log(`Instalation with pip: ${packageName}`);
-
-    const pythonExecutable = isWin
-      ? `"${installPath}\\python.exe"`
-      : `"${installPath}/bin/python3"`;
-
-    const installCommand = `${pythonExecutable} -m pip install --force-reinstall ${packageName}`;
-
-    const installerProc = exec(installCommand, {
-      shell: isWin ? 'cmd.exe' : '/bin/bash',
-    });
-
-    installerProc.on('error', (err: Error) => {
-      const message = `Error during installation: ${packageName}: ${err.message}`;
-      listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
-      log.error(err);
-      reject(new Error(message));
-    });
-
-    installerProc.on('exit', (exitCode: number) => {
-      if (exitCode === 0) {
-        console.log(`Package ${packageName} instaled succeeds.`);
-        resolve();
-      } else {
-        const message = `Package installator ${packageName} end with code: ${exitCode}`;
-        listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
-        log.error(new Error(message));
-        reject(new Error(message));
-      }
-    });
-  });
-}
-
-async function executeInstallSteps(): Promise<void> {
-  for (const step of installSteps) {
-    if (step.type === 'wheel') {
-      await installWheel(step.file);
-    } else if (step.type === 'pip') {
-      await installPipPackage(step.package);
-    }
-  }
-}
-
-installerProc.on('exit', async (exitCode: number) => {
-  if (exitCode === 0) { 
-    console.log('Main package installation complete. Starting other packages installation...');
-
-    try {
-      await executeInstallSteps();
-      listener?.onInstallStatus(EnvironmentInstallStatus.Success);
-      resolve(true);
-    } catch (error) {
-      reject();
+        installerProc.on('exit', (exitCode: number) => {
+          if (exitCode === 0) {
+            console.log(`Package ${wheelFile} installed sucesfully.`);
+            resolve();
+          } else {
+            const message = `Package installator ${wheelFile} end with code: ${exitCode}`;
+            listener?.onInstallStatus(
+              EnvironmentInstallStatus.Failure,
+              message
+            );
+            log.error(new Error(message));
+            reject(new Error(message));
+          }
+        });
+      });
     }
 
-  } else {
-    const message = `Installer exit: ${exitCode}`;
-    listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
-    log.error(new Error(message));
-    reject();
-    return;
-  }
-}); // installerProc.on('exit', (procExitCode:number) => {
+    function installPipPackage(packageName: string): Promise<void> {
+      return new Promise((resolve, reject) => {
+        console.log(`Instalation with pip: ${packageName}`);
+
+        const pythonExecutable = isWin
+          ? `"${installPath}\\python.exe"`
+          : `"${installPath}/bin/python3"`;
+
+        const installCommand = `${pythonExecutable} -m pip install --force-reinstall ${packageName}`;
+
+        const installerProc = exec(installCommand, {
+          shell: isWin ? 'cmd.exe' : '/bin/bash'
+        });
+
+        installerProc.on('error', (err: Error) => {
+          const message = `Error during installation: ${packageName}: ${err.message}`;
+          listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
+          log.error(err);
+          reject(new Error(message));
+        });
+
+        installerProc.on('exit', (exitCode: number) => {
+          if (exitCode === 0) {
+            console.log(`Package ${packageName} instaled succeeds.`);
+            resolve();
+          } else {
+            const message = `Package installator ${packageName} end with code: ${exitCode}`;
+            listener?.onInstallStatus(
+              EnvironmentInstallStatus.Failure,
+              message
+            );
+            log.error(new Error(message));
+            reject(new Error(message));
+          }
+        });
+      });
+    }
+
+    async function executeInstallSteps(): Promise<void> {
+      let i = 0;
+      const progress = ['60', '70', '80', '90', '99', '99'];
+      for (const step of installSteps) {
+        listener?.onInstallStatus(
+          EnvironmentInstallStatus.Running,
+          progress[i]
+        );
+        if (step.type === 'wheel') {
+          await installWheel(step.file);
+        } else if (step.type === 'pip') {
+          await installPipPackage(step.package);
+        }
+        i++;
+      }
+    }
+
+    installerProc.on('exit', async (exitCode: number) => {
+      if (exitCode === 0) {
+        console.log(
+          'Main package installation complete. Starting other packages installation...'
+        );
+
+        try {
+          await executeInstallSteps();
+          listener?.onInstallStatus(EnvironmentInstallStatus.Success);
+          resolve(true);
+        } catch (error) {
+          reject();
+        }
+      } else {
+        const message = `Installer exit: ${exitCode}`;
+        listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
+        log.error(new Error(message));
+        reject();
+        return;
+      }
+    }); // installerProc.on('exit', (procExitCode:number) => {
     // const jlabInstallCommand = 'conda install --yes -c conda-forge jupyterlab==4.1.2';
 
     // const jlabInstallerProc = exec(jlabInstallCommand, {
     //   shell: isWin ? 'cmd.exe' : '/bin/bash'
     // });
-  
-    
   });
 
   //   installerProc.on('error', (err: Error) => {
@@ -778,8 +795,8 @@ export function openDirectoryInExplorer(dirPath: string): boolean {
     platform === 'darwin'
       ? 'open'
       : platform === 'win32'
-        ? 'explorer'
-        : 'xdg-open';
+      ? 'explorer'
+      : 'xdg-open';
 
   exec(`${openCommand} "${dirPath}"`);
 
@@ -930,10 +947,12 @@ export async function setupJlabCLICommandWithElevatedRights(): Promise<
 export async function setupJlabCommandWithUserRights() {
   const symlinkPath = getJlabCLICommandSymlinkPath();
   const targetPath = getJlabCLICommandTargetPath();
-  console.log({symlinkPath, targetPath, 
-            targetExists: fs.existsSync(targetPath),
-            symlinkExists: fs.existsSync(symlinkPath)
-          });
+  console.log({
+    symlinkPath,
+    targetPath,
+    targetExists: fs.existsSync(targetPath),
+    symlinkExists: fs.existsSync(symlinkPath)
+  });
 
   if (!fs.existsSync(targetPath)) {
     return;
@@ -944,12 +963,14 @@ export async function setupJlabCommandWithUserRights() {
   const cmd3 = `chmod 755 ${targetPath}`;
   const cmd = `${cmd1} && ${cmd2} && ${cmd3}`;
   console.log('Execute', cmd);
-  sudo.exec(cmd, {name: 'MLJAR Studio configuration'},
-    function(error, stdout, stderr) {
-      if (error) throw error;
-      console.log('stdout: ' + stdout);
-    }
-  );
+  sudo.exec(cmd, { name: 'MLJAR Studio configuration' }, function (
+    error,
+    stdout,
+    stderr
+  ) {
+    if (error) throw error;
+    console.log('stdout: ' + stdout);
+  });
   // try {
   //   if (!fs.existsSync(symlinkPath)) {
   //     const cmd = `ln -s ${targetPath} ${symlinkPath}`;

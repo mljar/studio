@@ -735,19 +735,31 @@ export class WelcomeView {
           });
 
           window.electronAPI.onInstallBundledPythonEnvStatus((status, detail) => {
-            let message = status === 'STARTED' ?
-              'Installing Python environment, please wait ...' :
-              status === 'CANCELLED' ?
-              'Installation cancelled!' :
-              status === 'FAILURE' ?
-                'Failed to install!' :
-              status === 'SUCCESS' ? '👍 Installation succeeded ' : '';
-            if (detail) {
-              message += \`[\$\{detail\}]\`;
+            let message;
+            if(status === 'RUNNING') {
+              message = \`
+              <p style="font-weight: bold; font-size: 20px">Installing Python environment, please wait ...</p>
+              <progress style="width: 100%;" value=\$\{detail\} max="100"></progress>
+              <p style="font-weight: bold; font-size: 15px">Progress: \$\{detail\}%</p>
+              \`;
+            } else if (status === 'CANCELLED') {
+              message = \`
+              <p style="font-weight: bold; font-size: 20px">Installation cancelled!</p>
+              \`;
+            } else if (status === 'FAILURE') {
+              message = \`
+              <p style="font-weight: bold; font-size: 20px">Failed to install!</p>
+              \`;
+            } else if (status === 'SUCCESS') {
+              message = \`
+              <p style="font-weight: bold; font-size: 20px">👍 Installation succeeded!</p>
+              \`;
+            } else if (status === 'STARTED') {
+              message = \`
+              <p style="font-weight: bold; font-size: 20px">Installation started.</p>
+              \`;
             }
-
-            showNotificationPanel(message, status === 'CANCELLED' || status === 'FAILURE');
-    
+            showNotificationPanel(message, status === 'CANCELLED' || status === 'FAILURE' || status === 'SUCCESS');
             if (status === 'SUCCESS') {
               setTimeout(() => {
                 showNotificationPanel('', true);
