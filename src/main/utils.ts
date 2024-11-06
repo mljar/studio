@@ -316,7 +316,10 @@ export async function installCondaPackEnvironment(
     }
 
     listener?.onInstallStatus(EnvironmentInstallStatus.Started);
-    listener?.onInstallStatus(EnvironmentInstallStatus.Running, '10');
+    listener?.onInstallStatus(EnvironmentInstallStatus.Running, '5');
+    setTimeout(() => {
+      listener?.onInstallStatus(EnvironmentInstallStatus.Running, '10');
+    }, 1000);
 
     console.log('Unpack conda env ...');
 
@@ -365,13 +368,13 @@ export async function installCondaPackEnvironment(
       { type: 'wheel', file: 'jupyter_ai-2.26.0-py3-none-any.whl' },
       { type: 'wheel', file: 'jupyter_ai_magics-2.26.0-py3-none-any.whl' },
       { type: 'wheel', file: 'pieceofcode-0.4.0-py3-none-any.whl' },
-      { type: 'pip', package: 'langchain-openai==0.1.25' },
+      //{ type: 'pip', package: 'langchain-openai==0.1.25' },
       { type: 'pip', package: 'dask[dataframe]' }
     ];
 
     function installWheel(wheelFile: string): Promise<void> {
       return new Promise((resolve, reject) => {
-        listener?.onInstallStatus(EnvironmentInstallStatus.Running, '50');
+
         console.log(`Package installation from wheel file: ${wheelFile}`);
 
         const wheelPath = isWin
@@ -470,9 +473,12 @@ export async function installCondaPackEnvironment(
     installerProc.on('exit', async (exitCode: number) => {
       if (exitCode === 0) {
         console.log(
-          'Main package installation complete. Starting other packages installation...'
+          'Python setup completed. Starting other packages installation...'
         );
-
+        listener?.onInstallStatus(EnvironmentInstallStatus.Running, '40');
+        setTimeout(() => {
+          listener?.onInstallStatus(EnvironmentInstallStatus.Running, '50');
+        }, 1000);
         try {
           await executeInstallSteps();
           listener?.onInstallStatus(EnvironmentInstallStatus.Success);
@@ -795,8 +801,8 @@ export function openDirectoryInExplorer(dirPath: string): boolean {
     platform === 'darwin'
       ? 'open'
       : platform === 'win32'
-      ? 'explorer'
-      : 'xdg-open';
+        ? 'explorer'
+        : 'xdg-open';
 
   exec(`${openCommand} "${dirPath}"`);
 
