@@ -1,5 +1,6 @@
 {
     "disabledExtensions": {
-        "@jupyterlab/apputils-extension:announcements": true
+        "@jupyterlab/apputils-extension:announcements": true,
+        "@jupyterlab/extensionmanager-extension": true
     }
 }
