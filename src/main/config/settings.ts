@@ -72,7 +72,8 @@ export const serverLaunchArgsFixed = [
   // use our token rather than any pre-configured password
   '--ServerApp.password=""',
   `--ServerApp.token="{token}"`,
-  '--LabApp.quit_button=False'
+  '--LabApp.quit_button=False',
+  '--LabApp.check_for_updates_class="jupyterlab.NeverCheckForUpdate"'
 ];
 
 export const serverLaunchArgsDefault = [
