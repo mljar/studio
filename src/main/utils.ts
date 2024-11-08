@@ -317,9 +317,6 @@ export async function installCondaPackEnvironment(
 
     listener?.onInstallStatus(EnvironmentInstallStatus.Started);
     listener?.onInstallStatus(EnvironmentInstallStatus.Running, '5');
-    setTimeout(() => {
-      listener?.onInstallStatus(EnvironmentInstallStatus.Running, '10');
-    }, 1000);
 
     console.log('Unpack conda env ...');
 
@@ -476,9 +473,7 @@ export async function installCondaPackEnvironment(
           'Python setup completed. Starting other packages installation...'
         );
         listener?.onInstallStatus(EnvironmentInstallStatus.Running, '40');
-        setTimeout(() => {
-          listener?.onInstallStatus(EnvironmentInstallStatus.Running, '50');
-        }, 1000);
+        
         try {
           await executeInstallSteps();
           listener?.onInstallStatus(EnvironmentInstallStatus.Success);

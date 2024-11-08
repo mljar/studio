@@ -14,9 +14,13 @@ export class ProgressView {
       preload: path.join(__dirname, './preload.js')
     });
 
+    const img = '../../../app-assets/studio-large-logo.svg';
+    const darkImg = '../../../app-assets/studio-large-logo-dark.svg';
+    
     const progressLogo = fs.readFileSync(
-      path.join(__dirname, '../../../app-assets/progress-logo.svg')
+      path.join(__dirname, options.isDarkTheme? darkImg : img)
     );
+    
     const copyableSpanSrc = fs.readFileSync(
       path.join(__dirname, '../../../app-assets/copyable-span.js')
     );
