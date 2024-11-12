@@ -365,8 +365,8 @@ export async function installCondaPackEnvironment(
       { type: 'wheel', file: 'jupyter_ai-2.26.0-py3-none-any.whl' },
       { type: 'wheel', file: 'jupyter_ai_magics-2.26.0-py3-none-any.whl' },
       { type: 'wheel', file: 'pieceofcode-0.4.0-py3-none-any.whl' },
-      //{ type: 'pip', package: 'langchain-openai==0.1.25' },
-      { type: 'pip', package: 'dask[dataframe]' }
+      { type: 'pip', package: 'dask[dataframe]' },
+      { type: 'pip', package: '-U numpy==1.26.4' }
     ];
 
     function installWheel(wheelFile: string): Promise<void> {
