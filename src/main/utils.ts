@@ -362,9 +362,9 @@ export async function installCondaPackEnvironment(
       | { type: 'pip'; package: string };
 
     const installSteps: InstallStep[] = [
-      { type: 'wheel', file: 'jupyter_ai-0.5.0-py3-none-any.whl' },
-      { type: 'wheel', file: 'jupyter_ai_magics-0.5.0-py3-none-any.whl' },
-      { type: 'wheel', file: 'pieceofcode-0.5.0-py3-none-any.whl' },
+      { type: 'wheel', file: 'jupyter_ai-0.6.0-py3-none-any.whl' },
+      { type: 'wheel', file: 'jupyter_ai_magics-0.6.0-py3-none-any.whl' },
+      { type: 'wheel', file: 'pieceofcode-0.6.0-py3-none-any.whl' },
       { type: 'pip', package: 'dask[dataframe]' },
       { type: 'pip', package: '-U numpy==1.26.4' }
     ];

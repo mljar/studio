@@ -1,6 +1,6 @@
 {
   "name": "mljar-studio",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "MLJAR Studio is a notebook based IDE for Python programming with interactive code recipes",
   "main": "./build/out/main/main.js",
   "scripts": {

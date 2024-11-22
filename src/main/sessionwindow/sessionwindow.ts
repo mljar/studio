@@ -525,7 +525,7 @@ export class SessionWindow implements IDisposable {
           return;
         }
 
-        this._showProgressView('Creating new session');
+        this._showProgressView('Create something amazing');
 
         const sessionConfig = SessionConfig.createLocal();
         this._sessionConfig = sessionConfig;
@@ -1100,7 +1100,7 @@ export class SessionWindow implements IDisposable {
       }
       this._loadWelcomeView();
 
-      this.titleBarView.setTitle('MLJAR Studio v0.5.0');
+      this.titleBarView.setTitle('MLJAR Studio v0.6.0');
       this._window.setTitle('MLJAR Studio');
     } else {
       if (this._welcomeView) {
@@ -1372,7 +1372,7 @@ export class SessionWindow implements IDisposable {
       filesToOpen
     );
 
-    this._showProgressView('Creating new session');
+    this._showProgressView('Create something amazing');
 
     this._wsSettings = new WorkspaceSettings(sessionConfig.workingDirectory);
 
