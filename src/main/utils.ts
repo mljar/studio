@@ -285,14 +285,18 @@ export async function installCondaPackEnvironment(
   installPath: string,
   listener?: ICondaPackEnvironmentInstallListener
 ): Promise<boolean> {
-  console.log('Install Python environment');
+  log.info('Install Python environment');
   const isBundledInstaller = condaPackPath === getBundledEnvInstallerPath();
+  log.info(`Conda pack path ${condaPackPath}`);
+  log.info(`Bundled env installer path ${getBundledEnvInstallerPath()}`);
+
   // eslint-disable-next-line no-async-promise-executor
   return new Promise<boolean>(async (resolve, reject) => {
     const platform = process.platform;
     const isWin = platform === 'win32';
     installPath = installPath || getBundledPythonEnvPath();
 
+    log.info(`Install path ${installPath}`);
     if (fs.existsSync(installPath)) {
       if (listener) {
         const confirmed =
@@ -318,7 +322,7 @@ export async function installCondaPackEnvironment(
     listener?.onInstallStatus(EnvironmentInstallStatus.Started);
     listener?.onInstallStatus(EnvironmentInstallStatus.Running, '5');
 
-    console.log('Unpack conda env ...');
+    log.info(`Unpack conda env, install path ${installPath}`);
 
     try {
       fs.mkdirSync(installPath, { recursive: true });
@@ -328,12 +332,14 @@ export async function installCondaPackEnvironment(
         EnvironmentInstallStatus.Failure,
         'Failed to install the environment'
       );
-      log.error(new Error(`Installer Exit: ${error}`));
+      log.error(new Error(`Installer unpack archive error, exit: ${error}`));
       reject();
       return;
     }
 
     listener?.onInstallStatus(EnvironmentInstallStatus.Running, '20');
+
+    log.info('Mark env as Jupyter');
 
     markEnvironmentAsJupyterInstalled(installPath, {
       type: 'conda',
@@ -353,6 +359,8 @@ export async function installCondaPackEnvironment(
 
     listener?.onInstallStatus(EnvironmentInstallStatus.Running, '30');
 
+    log.info(`Run unpack command ${unpackCommand}`)
+
     const installerProc = exec(unpackCommand, {
       shell: isWin ? 'cmd.exe' : '/bin/bash'
     });
@@ -362,8 +370,8 @@ export async function installCondaPackEnvironment(
       | { type: 'pip'; package: string };
 
     const installSteps: InstallStep[] = [
-      { type: 'wheel', file: 'jupyter_ai_magics-0.6.0-py3-none-any.whl' },
-      { type: 'wheel', file: 'jupyter_ai-0.6.0-py3-none-any.whl' },
+      { type: 'wheel', file: 'jupyter_ai_magics-0.6.1-py3-none-any.whl' },
+      { type: 'wheel', file: 'jupyter_ai-0.6.1-py3-none-any.whl' },
       { type: 'wheel', file: 'pieceofcode-0.6.0-py3-none-any.whl' },
       { type: 'pip', package: 'dask[dataframe]' },
       { type: 'pip', package: '-U numpy==1.26.4' }
@@ -467,13 +475,19 @@ export async function installCondaPackEnvironment(
       }
     }
 
+    installerProc.on('error', (err: Error) => {
+      log.error('Installer errors');
+      log.error(err);
+    });
+
+
     installerProc.on('exit', async (exitCode: number) => {
       if (exitCode === 0) {
         console.log(
           'Python setup completed. Starting other packages installation...'
         );
         listener?.onInstallStatus(EnvironmentInstallStatus.Running, '40');
-        
+
         try {
           await executeInstallSteps();
           listener?.onInstallStatus(EnvironmentInstallStatus.Success);

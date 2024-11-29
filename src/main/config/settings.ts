@@ -155,7 +155,7 @@ export class UserSettings {
 
       ctrlWBehavior: new Setting<CtrlWBehavior>(CtrlWBehavior.CloseTab),
 
-      logLevel: new Setting<string>(LogLevel.Warn),
+      logLevel: new Setting<string>(LogLevel.Info),
 
       condaPath: new Setting<string>(''),
       systemPythonPath: new Setting<string>(''),
