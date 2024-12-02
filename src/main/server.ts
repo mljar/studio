@@ -41,10 +41,14 @@ function createLaunchScript(
   const isWin = process.platform === 'win32';
   const envPath = getEnvironmentPath(serverInfo.environment);
 
+  const pythonExecutable = isWin
+  ? `"${envPath}\\python.exe"`
+  : `"${envPath}/bin/python3"`;
+
   // note: traitlets<5.0 require fully specified arguments to
   // be followed by equals sign without a space; this can be
   // removed once jupyter_server requires traitlets>5.0
-  const launchArgs = ['python', '-m', 'jupyterlab'];
+  const launchArgs = [pythonExecutable, '-m', 'jupyterlab'];
 
   const strPort = port.toString();
 
