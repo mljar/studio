@@ -372,7 +372,7 @@ export async function installCondaPackEnvironment(
     const installSteps: InstallStep[] = [
       { type: 'wheel', file: 'ai_data_scientist_magics-0.6.1-py3-none-any.whl' },
       { type: 'wheel', file: 'ai_data_scientist-0.6.1-py3-none-any.whl' },
-      { type: 'wheel', file: 'pieceofcode-0.6.0-py3-none-any.whl' },
+      { type: 'wheel', file: 'pieceofcode-0.6.1-py3-none-any.whl' },
       { type: 'pip', package: 'dask[dataframe]' },
       { type: 'pip', package: '-U numpy==1.26.4' } //   --force-reinstall 
     ];
