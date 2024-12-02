@@ -42,8 +42,8 @@ function createLaunchScript(
   const envPath = getEnvironmentPath(serverInfo.environment);
 
   const pythonExecutable = isWin
-  ? `"${envPath}\\python.exe"`
-  : `"${envPath}/bin/python3"`;
+  ? `${envPath}\\python.exe`
+  : `${envPath}/bin/python3`;
 
   // note: traitlets<5.0 require fully specified arguments to
   // be followed by equals sign without a space; this can be
