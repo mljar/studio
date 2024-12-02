@@ -396,6 +396,14 @@ export async function installCondaPackEnvironment(
           shell: isWin ? 'cmd.exe' : '/bin/bash'
         });
 
+        installerProc.stdout.on('data', (data) => {
+          log.info(`[wheel install]: ${data}`);
+        });
+        
+        installerProc.stderr.on('data', (data) => {
+          log.error(`[wheel err]: ${data}`);
+        });
+
         installerProc.on('error', (err: Error) => {
           const message = `Error during installation ${wheelFile}: ${err.message}`;
           listener?.onInstallStatus(EnvironmentInstallStatus.Failure, message);
@@ -441,6 +449,14 @@ export async function installCondaPackEnvironment(
           reject(new Error(message));
         });
 
+        installerProc.stdout.on('data', (data) => {
+          log.info(`[pip install]: ${data}`);
+        });
+        
+        installerProc.stderr.on('data', (data) => {
+          log.error(`[pip err]: ${data}`);
+        });
+
         installerProc.on('exit', (exitCode: number) => {
           if (exitCode === 0) {
             console.log(`Package ${packageName} instaled succeeds.`);
@@ -477,13 +493,20 @@ export async function installCondaPackEnvironment(
 
     installerProc.on('error', (err: Error) => {
       log.error('Installer errors');
-      log.error(err);
+      log.error(`${err}`);
     });
 
+    installerProc.stdout.on('data', (data) => {
+      log.info(`${data}`);
+    });
+    
+    installerProc.stderr.on('data', (data) => {
+      log.error(`${data}`);
+    });
 
     installerProc.on('exit', async (exitCode: number) => {
       if (exitCode === 0) {
-        console.log(
+        log.info(
           'Python setup completed. Starting other packages installation...'
         );
         listener?.onInstallStatus(EnvironmentInstallStatus.Running, '40');
