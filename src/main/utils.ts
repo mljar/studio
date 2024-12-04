@@ -390,7 +390,7 @@ export async function installCondaPackEnvironment(
           ? `"${installPath}\\python.exe"`
           : `"${installPath}/bin/python3"`;
 
-        const installCommand = `${pythonExecutable} -m pip install ${wheelPath}`;
+        const installCommand = `${pythonExecutable} -m pip install --force-reinstall ${wheelPath}`;
 
         const installerProc = exec(installCommand, {
           shell: isWin ? 'cmd.exe' : '/bin/bash'
