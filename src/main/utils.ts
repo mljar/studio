@@ -370,9 +370,9 @@ export async function installCondaPackEnvironment(
       | { type: 'pip'; package: string };
 
     const installSteps: InstallStep[] = [
-      { type: 'wheel', file: 'ai_data_scientist_magics-0.6.2-py3-none-any.whl' },
-      { type: 'wheel', file: 'ai_data_scientist-0.6.2-py3-none-any.whl' },
-      { type: 'wheel', file: 'pieceofcode-0.6.2-py3-none-any.whl' },
+      { type: 'wheel', file: 'ai_data_scientist_magics-0.7.0-py3-none-any.whl' },
+      { type: 'wheel', file: 'ai_data_scientist-0.7.0-py3-none-any.whl' },
+      { type: 'wheel', file: 'pieceofcode-0.7.0-py3-none-any.whl' },
       { type: 'wheel', file: 'variable_inspector-0.1.0-py3-none-any.whl' },
       { type: 'wheel', file: 'package_manager-0.1.0-py3-none-any.whl' },
       { type: 'pip', package: 'dask[dataframe]' },
@@ -478,7 +478,7 @@ export async function installCondaPackEnvironment(
 
     async function executeInstallSteps(): Promise<void> {
       let i = 0;
-      const progress = ['60', '70', '80', '90', '99', '99'];
+      const progress = ['60', '65', '70', '80', '90', '99', '99', '99', '99'];
       for (const step of installSteps) {
         listener?.onInstallStatus(
           EnvironmentInstallStatus.Running,
