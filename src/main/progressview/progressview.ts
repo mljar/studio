@@ -10,17 +10,17 @@ import { EventTypeMain, EventTypeRenderer } from '../eventtypes';
 export class ProgressView {
   constructor(options: ProgressView.IOptions) {
     this._view = new ThemedView({
-      isDarkTheme: options.isDarkTheme,
+      isDarkTheme: false, // options.isDarkTheme,
       preload: path.join(__dirname, './preload.js')
     });
 
     const img = '../../../app-assets/studio-large-logo.svg';
-    const darkImg = '../../../app-assets/studio-large-logo-dark.svg';
-    
+    //const darkImg = '../../../app-assets/studio-large-logo-dark.svg';
+
     const progressLogo = fs.readFileSync(
-      path.join(__dirname, options.isDarkTheme? darkImg : img)
+      path.join(__dirname, img) //options.isDarkTheme? darkImg : img)
     );
-    
+
     const copyableSpanSrc = fs.readFileSync(
       path.join(__dirname, '../../../app-assets/copyable-span.js')
     );
