@@ -1,3 +1,9 @@
+
+<p align="center">
+  <img src="https://github.com/mljar/studio/blob/main/media/mljar-studio-app.jpg?raw=true" alt="MLJAR Studio app banner"/>
+</p>
+
+
 # MLJAR Studio
 
 MLJAR Studio runs as a customized desktop version of **JupyterLab**, designed to be beginner-friendly with a simple interface.
