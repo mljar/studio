@@ -18,6 +18,7 @@ MLJAR Studio runs as a customized desktop version of **JupyterLab**, designed to
 
 - **AI Assistant**: Integrated AI assistant powered by GPT-4 to assist with coding, debugging, and answering your programming questions.
 
+<img src="https://github.com/mljar/studio/blob/main/media/load-data.gif?raw=true" alt="MLJAR Studio app banner"/>
 
 ## Download the App
 
