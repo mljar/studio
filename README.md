@@ -18,7 +18,50 @@ MLJAR Studio runs as a customized desktop version of **JupyterLab**, designed to
 
 - **AI Assistant**: Integrated AI assistant powered by GPT-4 to assist with coding, debugging, and answering your programming questions.
 
-<img src="https://github.com/mljar/studio/blob/main/media/load-data.gif?raw=true" alt="MLJAR Studio app banner"/>
+## Features
+
+### Variable Inspector
+
+There is a [Variable Explorer](https://github.com/mljar/variable-inspector) window were you see your variables, and their values. 
+
+<img src="https://github.com/mljar/studio/blob/main/media/variable-inspector.png?raw=true" alt="Variable Inspector in MLJAR Studio"/>
+
+### Packages Manager
+
+You can see all available packages in the notebook in [Packages Manager](https://github.com/mljar/packages-manager). You can add new package or remove one. 
+
+<img src="https://github.com/mljar/studio/blob/main/media/package-manager.png?raw=true" alt="Package Manager in MLJAR Studio"/>
+
+### Piece of Code 🍰
+
+There is a set of interactive code snippets. Code recipes are grouped into cookbooks. 
+
+<img src="https://github.com/mljar/studio/blob/main/media/piece-of-code.png?raw=true" alt="Piece of Code in MLJAR Studio"/>
+
+Example cookbook for `Data Wrangling`:
+
+<img src="https://github.com/mljar/studio/blob/main/media/piece-of-code.png-data-wrangling?raw=true" alt="Piece of Code Data Wrangling in MLJAR Studio"/>
+
+Code recipes are aware of your variables and their types. It makes coding very simple. Below example with AutoML training.
+
+#### Load example dataset
+
+<img src="https://github.com/mljar/studio/blob/main/media/load-data.gif?raw=true" alt="Load exmaple dataset"/>
+
+#### Select X and y
+
+<img src="https://github.com/mljar/studio/blob/main/media/select-x-y.gif?raw=true" alt="Select data X,y"/>
+
+#### Train AutoML
+
+<img src="https://github.com/mljar/studio/blob/main/media/train-automl.gif?raw=true" alt="Train AutoML"/>
+
+
+### AI assistant 🤖
+
+We have AI assistant too! You can ask it for help with your code. 
+
+<img src="https://github.com/mljar/studio/blob/main/media/ai-assistant.png?raw=true" alt="AI assistant in MLJAR Studio"/>
 
 ## Download the App
 
