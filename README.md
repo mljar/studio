@@ -20,6 +20,14 @@ MLJAR Studio runs as a customized desktop version of **JupyterLab**, designed to
 
 ## Features
 
+### One-click setup
+
+Setup Python environment on your machine with one-click.
+
+
+<img src="https://github.com/mljar/studio/blob/main/media/install-python-one-click.png?raw=true" alt="Install Python with one click in MLJAR Studio"/>
+
+
 ### Variable Inspector
 
 There is a [Variable Explorer](https://github.com/mljar/variable-inspector) window were you see your variables, and their values. 
@@ -40,7 +48,7 @@ There is a set of interactive code snippets. Code recipes are grouped into cookb
 
 Example cookbook for `Data Wrangling`:
 
-<img src="https://github.com/mljar/studio/blob/main/media/piece-of-code.png-data-wrangling?raw=true" alt="Piece of Code Data Wrangling in MLJAR Studio"/>
+<img src="https://github.com/mljar/studio/blob/main/media/piece-of-code-data-wrangling.png?raw=true" alt="Piece of Code Data Wrangling in MLJAR Studio"/>
 
 Code recipes are aware of your variables and their types. It makes coding very simple. Below example with AutoML training.
 
