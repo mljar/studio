@@ -32,7 +32,9 @@ Setup Python environment on your machine with one-click.
 
 There is a [Variable Explorer](https://github.com/mljar/variable-inspector) window were you see your variables, and their values. 
 
-<img src="https://github.com/mljar/studio/blob/main/media/variable-inspector.png?raw=true" alt="Variable Inspector in MLJAR Studio"/>
+<img src="https://github.com/mljar/variable-inspector/blob/main/media/jupyter-variable-inspector.gif?raw=true" alt="Variable Inspector in MLJAR Studio"/>
+
+
 
 ### Packages Manager
 
