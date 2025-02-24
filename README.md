@@ -4,6 +4,16 @@
 </p>
 
 
+<p align="center">
+<a href="https://platform.mljar.com">🚀 Download</a>
+<span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+<a href="https://github.com/mljar/studio/issues">🤝 Issues</a>
+<span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+<a href="https://mljar.com/docs/">📕 Documentation</a>
+
+</p>
+
+
 # MLJAR Studio
 
 MLJAR Studio runs as a customized desktop version of **JupyterLab**, designed to be beginner-friendly with a simple interface.
@@ -20,7 +30,7 @@ MLJAR Studio runs as a customized desktop version of **JupyterLab**, designed to
 
 ## Features
 
-### One-click setup
+### One-click setup 🐍
 
 Setup Python environment on your machine with one-click.
 
@@ -28,7 +38,7 @@ Setup Python environment on your machine with one-click.
 <img src="https://github.com/mljar/studio/blob/main/media/install-python-one-click.png?raw=true" alt="Install Python with one click in MLJAR Studio"/>
 
 
-### Variable Inspector
+### Variable Inspector 🧐
 
 There is a [Variable Explorer](https://github.com/mljar/variable-inspector) window were you see your variables, and their values. 
 
@@ -36,7 +46,7 @@ There is a [Variable Explorer](https://github.com/mljar/variable-inspector) wind
 
 
 
-### Packages Manager
+### Packages Manager 📦
 
 You can see all available packages in the notebook in [Packages Manager](https://github.com/mljar/packages-manager). You can add new package or remove one. 
 
