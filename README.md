@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://github.com/mljar/studio/blob/main/media/mljar-studio-app.jpg?raw=true" alt="MLJAR Studio app banner"/>
+  <img src="https://github.com/mljar/studio/blob/main/media/mljar-studio-app-2.jpg?raw=true" alt="MLJAR Studio app banner"/>
 </p>
 
 
