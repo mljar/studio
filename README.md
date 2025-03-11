@@ -16,7 +16,7 @@
 
 # MLJAR Studio
 
-MLJAR Studio runs as a customized desktop version of **JupyterLab**, designed to be beginner-friendly with a simple interface.
+MLJAR Studio is a desktop application with **JupyterLab**, designed to be beginner-friendly with a simple interface.
 
 - **One-Click Python Installation**: On the first run, MLJAR Studio automatically installs Python 3.11 with just one click, making setup hassle-free.
 
