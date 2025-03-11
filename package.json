@@ -218,6 +218,9 @@
   "dependencies": {
     "@lumino/signaling": "^1.10.0",
     "@vscode/sudo-prompt": "^9.3.1",
+    "app-builder-lib": "^24.13.2",
+    "braces": "^3.0.3",
+    "cross-spawn": "^7.0.5",
     "ejs": "^3.1.7",
     "electron-log": "^4.4.8",
     "elliptic-with-secp112r2": "^6.5.4",
