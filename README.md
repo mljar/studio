@@ -1,32 +1,21 @@
 
-<p align="center">
-  <img src="https://github.com/mljar/studio/blob/main/media/mljar-studio-app-2.jpg?raw=true" alt="MLJAR Studio app banner"/>
-</p>
-
-
-<p align="center">
-<a href="https://platform.mljar.com">🚀 Download</a>
-<span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-<a href="https://github.com/mljar/studio/issues">🤝 Issues</a>
-<span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-<a href="https://mljar.com/docs/">📕 Documentation</a>
-
-</p>
-
-
 # MLJAR Studio
 
-MLJAR Studio is a desktop application with **JupyterLab**, designed to be beginner-friendly with a simple interface.
+MLJAR Studio is a desktop app built on **JupyterLab**, created especially for beginners. It has an easy-to-use, friendly interface to help you start quickly.
 
-- **One-Click Python Installation**: On the first run, MLJAR Studio automatically installs Python 3.11 with just one click, making setup hassle-free.
+Here’s what you get:
 
-- **Variable Inspector**: Easily inspect and view variables in your code with the integrated [Variable Inspector](https://github.com/mljar/variable-inspector).
+- **One-Click Python Setup**: MLJAR Studio automatically installs Python 3.11 for you with just one click when you first launch the app. No complicated setup needed!
 
-- **Visual Package Manager**: Manage your Python packages with the intuitive visual [Package Manager](https://github.com/mljar/package-manager), making it simple to install and update libraries.
+- **Variable Inspector**: Quickly see and explore the variables in your code using the built-in [Variable Inspector](https://github.com/mljar/variable-inspector).
 
-- **Interactive Code Recipes**: A collection of interactive code recipes that provide a graphical interface to help you create and run code without needing to type everything manually.
+- **Visual Package Manager**: Easily manage your Python packages with the visual [Package Manager](https://github.com/mljar/package-manager). Installing and updating libraries is super simple.
 
-- **AI Assistant**: Integrated AI assistant powered by GPT-4 to assist with coding, debugging, and answering your programming questions.
+- **Interactive Code Recipes**: Use ready-made interactive code recipes with a graphical interface. No need to write everything from scratch—just click and run!
+
+- **AI Assistant**: An integrated AI helper powered by GPT-4 is always available. It can assist you with coding, debugging, or answering any programming questions you have.
+
+https://github.com/user-attachments/assets/2dde0e81-c1aa-4670-a1ad-db43c124d273
 
 ## Features
 
