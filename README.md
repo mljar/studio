@@ -15,7 +15,12 @@ Here’s what you get:
 
 - **AI Assistant**: An integrated AI helper powered by GPT-4 is always available. It can assist you with coding, debugging, or answering any programming questions you have.
 
-https://github.com/user-attachments/assets/2dde0e81-c1aa-4670-a1ad-db43c124d273
+| Introduce MLJAR Studio | AutoML Get Started |
+|------------------------|--------------------|
+| [![](https://github.com/mljar/studio/blob/main/media/mljar-studio-introduce.jpg?raw=true)](https://youtu.be/n86msCLPTEY) |[![](https://github.com/mljar/studio/blob/main/media/mljar-studio-automl-get-started.jpg?raw=true)](https://youtu.be/t_opxR5dbPU) |
+| **Advanced Data Analysis** | **Data Visualization** |
+|  [![](https://github.com/mljar/studio/blob/main/media/mljar-studio-data-analysis.jpg?raw=true)](https://youtu.be/N3-bs3sQ6jc) | [![](https://github.com/mljar/studio/blob/main/media/mljar-studio-data-visualization.jpg?raw=true)](https://youtu.be/55DqnTSvgXk) |
+
 
 ## Features
 
