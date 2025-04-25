@@ -375,6 +375,7 @@ export async function installCondaPackEnvironment(
       { type: 'wheel', file: 'pieceofcode-0.7.2-py3-none-any.whl' },
       { type: 'wheel', file: 'variable_inspector-1.0.1-py3-none-any.whl' },
       { type: 'wheel', file: 'jupyter_package_manager-1.0.2-py3-none-any.whl' },
+      { type: 'wheel', file: 'jlab_enhanced_launcher-4.0.1-py3-none-any.whl' },
       { type: 'pip', package: 'dask[dataframe]' },
       { type: 'pip', package: '-U numpy==1.26.4' } //   --force-reinstall 
     ];
@@ -401,7 +402,7 @@ export async function installCondaPackEnvironment(
         installerProc.stdout.on('data', (data) => {
           log.info(`[wheel install]: ${data}`);
         });
-        
+
         installerProc.stderr.on('data', (data) => {
           log.error(`[wheel err]: ${data}`);
         });
@@ -454,7 +455,7 @@ export async function installCondaPackEnvironment(
         installerProc.stdout.on('data', (data) => {
           log.info(`[pip install]: ${data}`);
         });
-        
+
         installerProc.stderr.on('data', (data) => {
           log.error(`[pip err]: ${data}`);
         });
@@ -478,7 +479,7 @@ export async function installCondaPackEnvironment(
 
     async function executeInstallSteps(): Promise<void> {
       let i = 0;
-      const progress = ['60', '65', '70', '80', '90', '99', '99', '99', '99'];
+      const progress = ['40', '50', '60', '65', '70', '80', '90', '99', '99', '99', '99'];
       for (const step of installSteps) {
         listener?.onInstallStatus(
           EnvironmentInstallStatus.Running,
@@ -501,7 +502,7 @@ export async function installCondaPackEnvironment(
     installerProc.stdout.on('data', (data) => {
       log.info(`${data}`);
     });
-    
+
     installerProc.stderr.on('data', (data) => {
       log.error(`${data}`);
     });
