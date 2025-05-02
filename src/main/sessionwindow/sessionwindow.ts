@@ -1100,7 +1100,7 @@ export class SessionWindow implements IDisposable {
       }
       this._loadWelcomeView();
 
-      this.titleBarView.setTitle('MLJAR Studio v0.7.2');
+      this.titleBarView.setTitle('MLJAR Studio v0.8.0');
       this._window.setTitle('MLJAR Studio');
     } else {
       if (this._welcomeView) {
